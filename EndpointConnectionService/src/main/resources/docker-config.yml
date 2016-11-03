@@ -1,0 +1,48 @@
+# use the simple server factory if you only want to run on a single port
+#server:
+#  type: simple
+#  connector:
+#    type: http
+#    port: 8080
+
+# keep things simple inside the Docker container.  Do the trasport security farther out at the load balancer.
+server:
+  applicationConnectors:
+    - type: http
+      port: 80
+
+  adminConnectors:
+    - type: http
+      port: 81
+
+# Logging settings.
+logging:
+
+  # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
+  level: INFO
+
+  # Logger-specific levels.
+  loggers:
+
+    # Sets the level for 'com.example.app' to DEBUG.
+    com.kunai.keyvault: DEBUG
+
+  appenders:
+    - type: console
+    - type: file
+      threshold: DEBUG
+      logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %logger{5} - %X{code} %msg %n"
+      currentLogFilename: /tmp/application.log
+      archivedLogFilenamePattern: /tmp/application-%d{yyyy-MM-dd}.log
+      archivedFileCount: 7
+      timeZone: UTC
+
+# Encryptor settings...
+encryptor:
+  type: kms
+  keyId: "arn:aws:kms:us-west-2:365647338134:key/1466ea1b-ed5f-433c-a4ea-fdad372df818"
+
+# Decryptor settings (probably the same as the encryptor)...
+decryptor:
+  type: kms
+  keyId: "arn:aws:kms:us-west-2:365647338134:key/1466ea1b-ed5f-433c-a4ea-fdad372df818"
