@@ -1,100 +1,93 @@
 # Introduction
 
-The Keystor Endpoint Connection Service provides an interface to services in the data center that stores sensitive data so that they can
-connect to external services that consume or produce sensitive data.  The ReST API provides a simple way to:
-
-* Call the protected services
-* Encrypt data returned from the protected services (e.g. encrypt PCI data as it is returned from Visa)
-* Decrypt data which was previously encrypted by the Keystor data center and use it to call a protected service
+See ../README.md for an introduction
 
 # Overview
 
-Once this application is running you simply call /proxy and set headers as follows:
+The Endpoint Connection Service is used to do decryption and encryption as you are calling external endpoints. This
+service should not be visible publicly.  Instead you should be connecting only the applications that need it to the
+service with some form of strong two way authenticated transport level secruity (e.g. a VPN)
 
-                .header("proxy-url", "http://someserver") // some protected server you want to access
-                .header("encryption-regex0", "(?<=<ID>).*?(?=</ID>)") // a regular expression used to locate data to encrypt in the response
-                .header("encryption-type0", "0") // The type of encryption
-                .header("encryption-regex1", "(?<=<CARD>).*?(?=</CARD>)") // a second encryption
-                .header("encryption-type1", "0") // The type of the second encryption
-                .header("decryption-regex0", "(?<=<ID>).*?(?=</ID>)") // a regular expression used to locate data to decrypt in the request
-                .header("decryption-type0", "0") // The type of decryption
+* To run the server run (replace the version with the correct one).
 
-Currently the supported encryption types are as follows:
-            
-            0 = Test Encryption (This is for testing only and surrouds sensitive data with 'encrypted { }'.  It's not actually an encryption.)
-            1 = Simple Encrypt
-            2 = Simple Tokenize 
-            3 = PCI masked card data tokenization.  This does format preserving tokenization of PCI card data so that the BIN and last 4 numbers are preserved.
+        java -jar target/keyvault-encryption-0.0.1-rc5-SNAPSHOT.jar server example.yml
 
-Support for anything beyond simple Encryption/Decryption with AES depends on integration with Voltage and other products which may or may not be 
-part of a particular deployment.
-
-# Running The Application
-
-To test the example application run the following commands.
-
-* To package the example run.
-
-        mvn package
-
-
-* To run the server run.
-
-        java -jar target/keyvault-endpoingconnectionservice-0.0.1-rc1-SNAPSHOT.jar server example.yml
-
-**Title**
+**Encryption Service**
 ----
-  <_Additional information about your API call. Try to use verbs that match both request type (fetching vs modifying) and plurality (one vs multiple)._>
 
+ 
 * **URL**
 
-  <_The URL Structure (path only, no root url)_>
+  proxy
 
 * **Method:**
-  
-  <_The request type_>
 
   `GET` | `POST` | `DELETE` | `PUT`
-  
-*  **URL Params**
-
-   <_If URL params exist, specify them in accordance with name mentioned in URL section. Separate into optional and required. Document data constraints._> 
+    
+*  **URL Headers**
 
    **Required:**
- 
-   `id=[integer]`
-
+   
+   `proxy-url: [the full URL of the endpoint you want to connect to`
+   
    **Optional:**
- 
-   `photo_id=[alphanumeric]`
-
+   
+   `decrypt-regex[n]: [the nth reg exe used to find strings in the request body needing to be decrypted]`
+   `decrypt-type[n]: [test|generic|card_data|ssn]`
+   `encrypt-regex[n]: [the nth reg exe used to find strings in the response body needing to be ecrypted]`
+   `encrypt-type[n]: [test|generic|card_data|ssn]`
+   
 * **Data Params**
 
-  <_If making a post request, what should the body payload look like? URL Params rules apply here too._>
+    **Content:** `Your content including any encrypted content that will be decrypted before it gets sent to the endpoint.`
 
-* **Success Response:**
-  
-  <_What should the status code be on success and is there any returned data? This is useful when people need to to know what their callbacks should expect!_>
-
-  * **Code:** 200 <br />
-    **Content:** `{ id : 12 }`
+* **Success Response:**  
+ 
+  * **Code:** 200 Success (or what ever the server that the request was proxied to returned)
+    **Content:** `[The response data from the proxied endpoint with any encryptions specified in encrypt headers applied]`
  
 * **Error Response:**
 
-  <_Most endpoints will have many ways they can fail. From unauthorized access, to wrongful parameters etc. All of those should be liste d here. It might seem repetitive, but it helps prevent assumptions from being made where they should be._>
-
-  * **Code:** 401 UNAUTHORIZED <br />
-    **Content:** `{ error : "Log in" }`
-
-  OR
-
-  * **Code:** 422 UNPROCESSABLE ENTRY <br />
-    **Content:** `{ error : "Email Invalid" }`
+  * **Code:** 500 Internal Error <br />
+    **Content:** `A very limited error message for security reasons`
 
 * **Sample Call:**
 
-  <_Just a sample call to your endpoint in a runnable format ($.ajax call or a curl request) - this makes life easier and more predictable._> 
-
+```
+curl --data "some data and then <CARD>{paste the value returned from the encryptor here}</CARD>" --header "proxy-url: http://httpbin.org/post" --header "decryption-regex0: (?<=<CARD>).*?(?=</CARD>)" --header "decryption-type0: card_data" --header "Content-Type: text/plain" --header "Accept: text/plain" http://localhost:8080/proxy
+```
 * **Notes:**
 
-  <_This is where all uncertainties, commentary, discussion etc. can go. I recommend timestamping and identifying oneself when leaving comments here._> 
+  Depending on how and where you deployed the service other responses are possible. As noted elsewhere you should
+  only call this service externally using some form of transport level security (e.g. HTTPS).
+  
+* **URL**
+
+  healthcheck
+
+* **Method:**
+
+  `GET`    
+
+* **Success Response:**
+  
+  * **Code:** 200 Success
+    **Content:** `[Some details which change depending on the keyvault]`
+ 
+* **Error Response:**
+
+  * **Code:** !=200 r <br />
+    **Content:** `[Maybe some details about what's not working]`
+
+* **Sample Call:**
+
+```
+curl http://localhost:8080/healthcheck
+```
+* **Notes:**
+
+  Depending on the keyvault the response may be useful, but primarily this just lets you know that the service is up
+  and running in the container.  This becomes pretty useful if you want to do autoscaling on AWS with an ELB since
+  you typically won't be exposing anything at the root level that has a straightforward response, so the default
+  query of root isn't going to work.
+  

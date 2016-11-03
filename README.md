@@ -73,12 +73,16 @@ to decrypt data passed to it and send it along to white listed external endpoint
 The *keyvault* is the storage for your cryptographic keys.  KeyStor currently supports the following kinds of keyvaults:
 
 * Simple AES encryption with a single key
+* Amazon KMS Keys with envelope encryption
 * HP Voltage
 
 Use simple AES encryption if you are looking for a low cost, but safe solution and you don't need the features provided
 by HP Voltage. AES encryption will return you a simple AES encrypted cypher containing your data.  For each cryptographic
 key you use in your back end you can encrypt up to 250 million terabytes without needing to worry about key rotation as
 long as the security of your secure data center is maintained.
+
+Use KMS Keys if you are going to run KeyStor in AWS.  They make it much easier to manage and secure your keys, have
+different keys for development and production, etc.  Also, with AWS keys you can enable key rotation.
 
 Use HP Voltage if you want tokenization, format preserving encryption, management of end-point encryption devices (e.g. 
 encrypting pin pads), data masking, access to decryption through the endpoint connection service based on roles, and
@@ -206,7 +210,9 @@ Open the configuration file used with docker images and set it up as needed...
 vi src/main/resources/docker-config.yml
 ```
 
-Save it and build the Docker image...
+The configuration file for the Docker builds is set up to use KMS keys, so you will either need to change the encryptor
+and decryptor settings to work with your Keystor strategy or set the KeyId to the ID string for the KMS Key ID you
+want to use.  Save it and build the Docker image...
 
 ```
 mvn package
@@ -285,8 +291,8 @@ of extra information placed in the header of the request:
 * The `encrypt-regex{n}` and `encrypt-regex{n}` headers
 
 Other than the addition of these headers, and the change in the address the request is initially made to, you can format
-the contents of your request exactly the same way you would if the code was calling the endpoint directly. There is one possible
-exception, but we will get to that shortly.  Let's go over each of the three headers in the above order...
+the contents of your request exactly the same way you would if the code was calling the endpoint directly.
+ Let's go over each of the three headers in the above order...
 
 ### The `proxy-url` header
 

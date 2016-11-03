@@ -1,65 +1,84 @@
 # Introduction
 
+See ../README.md for an introduction
+
 # Overview
 
+The Encryption Service is used to do encryption as close to the end user as possible.  Ideally this is outside your data center
+so the service should be public facing and should not have access to other services like the Endpoint Connection Service.
 
-* To run the server run.
+* To run the server run (replace the version with the correct one).
 
-        java -jar target/dropwizard-example-0.8.0-rc2-SNAPSHOT.jar server example.yml
+        java -jar target/keyvault-encryption-0.0.1-rc5-SNAPSHOT.jar server example.yml
 
-**Title**
+**Encryption Service**
 ----
-  <_Additional information about your API call. Try to use verbs that match both request type (fetching vs modifying) and plurality (one vs multiple)._>
 
+ 
 * **URL**
 
-  <_The URL Structure (path only, no root url)_>
+  encrypt
 
 * **Method:**
-  
-  <_The request type_>
 
-  `GET` | `POST` | `DELETE` | `PUT`
-  
+  `GET`
+    
 *  **URL Params**
 
-   <_If URL params exist, specify them in accordance with name mentioned in URL section. Separate into optional and required. Document data constraints._> 
-
    **Required:**
- 
-   `id=[integer]`
-
-   **Optional:**
- 
-   `photo_id=[alphanumeric]`
+   `type=[generic|card_data|ssn]`
 
 * **Data Params**
 
-  <_If making a post request, what should the body payload look like? URL Params rules apply here too._>
+    **Content:** `[A String that you want encrypted]`
 
-* **Success Response:**
-  
-  <_What should the status code be on success and is there any returned data? This is useful when people need to to know what their callbacks should expect!_>
-
-  * **Code:** 200 <br />
-    **Content:** `{ id : 12 }`
+* **Success Response:**  
+ 
+  * **Code:** 200 Success
+    **Content:** `[An encrypted string]`
  
 * **Error Response:**
 
-  <_Most endpoints will have many ways they can fail. From unauthorized access, to wrongful parameters etc. All of those should be liste d here. It might seem repetitive, but it helps prevent assumptions from being made where they should be._>
-
-  * **Code:** 401 UNAUTHORIZED <br />
-    **Content:** `{ error : "Log in" }`
-
-  OR
-
-  * **Code:** 422 UNPROCESSABLE ENTRY <br />
-    **Content:** `{ error : "Email Invalid" }`
+  * **Code:** 500 Internal Error <br />
+    **Content:** `A very limited error message for security reasons`
 
 * **Sample Call:**
 
-  <_Just a sample call to your endpoint in a runnable format ($.ajax call or a curl request) - this makes life easier and more predictable._> 
-
+```
+curl --data "4012888888881880" http://localhost:8080/encrypt?type=card_data
+```
 * **Notes:**
 
-  <_This is where all uncertainties, commentary, discussion etc. can go. I recommend timestamping and identifying oneself when leaving comments here._> 
+  Depending on how and where you deployed the service other responses are possible. As noted elsewhere you should
+  only call this service externally using some form of transport level security (e.g. HTTPS).
+  
+* **URL**
+
+  healthcheck
+
+* **Method:**
+
+  `GET`    
+
+* **Success Response:**
+  
+  * **Code:** 200 Success
+    **Content:** `[Some details which change depending on the keyvault]`
+ 
+* **Error Response:**
+
+  * **Code:** !=200 r <br />
+    **Content:** `[Maybe some details about what's not working]`
+
+* **Sample Call:**
+
+```
+curl http://localhost:8080/healthcheck
+```
+* **Notes:**
+
+  Depending on the keyvault the response may be useful, but primarily this just lets you know that the service is up
+  and running in the container.  This becomes pretty useful if you want to do autoscaling on AWS with an ELB since
+  you typically won't be exposing anything at the root level that has a straightforward response, so the default
+  query of root isn't going to work.
+  
