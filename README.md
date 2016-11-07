@@ -54,7 +54,7 @@ your company with access to sensitive data are the ones that can get into that d
 
 A KeyStor is comprised of two ReSTful services and a keyvault...
 
-![KeyStor Architecture](https://github.com/acooley/KeyStor/raw/master/KeyStor/Slide1.jpg)
+![KeyStor Architecture](https://github.com/kunai-consulting/KeyStor/raw/master/KeyStor/Slide1.jpg)
 
 # Encryption Service
 
