@@ -4,10 +4,11 @@ import com.amazonaws.services.kms.AWSKMS;
 import com.amazonaws.services.kms.AWSKMSClientBuilder;
 import com.amazonaws.services.kms.model.GenerateDataKeyRequest;
 import com.amazonaws.services.kms.model.GenerateDataKeyResult;
+import com.kunai.keyvault.config.HSM;
+import com.kunai.keyvault.crypto.EncryptionException;
 import com.kunai.keyvault.crypto.Encryptor;
 import com.kunai.keyvault.crypto.aes.AES;
-import com.kunai.keyvault.crypto.voltage.vibesimple.Fault;
-import com.kunai.keyvault.crypto.voltage.vibesimple.FaultResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.nio.ByteBuffer;
 
@@ -17,16 +18,12 @@ import java.nio.ByteBuffer;
 public class KMSEncryptor implements Encryptor {
 
     public String keyId;
-    protected AWSKMS kms;
 
-    @Override
-    public void init() {
-        kms = getClient();
-    }
+    @Autowired
+    private HSM hsmClient;
 
-    @Override
-    public void destroy() {
-
+    public KMSEncryptor(String keyId) {
+        this.keyId = keyId;
     }
 
     /**
@@ -40,10 +37,10 @@ public class KMSEncryptor implements Encryptor {
     /**
      * @param socialSecurityNumber a String that represents a Social Security Number
      * @return returns java.lang.String
-     * @throws FaultResponse if the encoding can't be done.
+     * @throws EncryptionException if the encoding can't be done.
      */
     @Override
-    public String protectSocialSecurityNumber(String socialSecurityNumber) throws FaultResponse {
+    public String protectSocialSecurityNumber(String socialSecurityNumber) throws EncryptionException {
         return protectGenericData(socialSecurityNumber);
     }
 
@@ -51,26 +48,26 @@ public class KMSEncryptor implements Encryptor {
      * @param dataIn a String representing a value that has to be encrypted.
      * @param format a String representing the desired format of the dataIn parameter.
      * @return returns java.lang.String
-     * @throws FaultResponse if the encoding can't be done.
+     * @throws EncryptionException if the encoding can't be done.
      */
     @Override
-    public String protectFormattedData(String dataIn, String format) throws FaultResponse {
+    public String protectFormattedData(String dataIn, String format) throws EncryptionException {
         return protectGenericData(dataIn);
     }
 
     /**
      * @param dataIn a String representing a value that has to be encrypted.
      * @return returns byte[]
-     * @throws FaultResponse if the encoding can't be done.
+     * @throws EncryptionException if the encoding can't be done.
      */
     @Override
-    public String protectGenericData(String dataIn) throws FaultResponse {
+    public String protectGenericData(String dataIn) throws EncryptionException {
         //Get a new data key...
         GenerateDataKeyRequest dataKeyRequest = new GenerateDataKeyRequest();
         dataKeyRequest.setKeyId(keyId);
         dataKeyRequest.setKeySpec("AES_128");
 
-        GenerateDataKeyResult dataKeyResult = kms.generateDataKey(dataKeyRequest);
+        GenerateDataKeyResult dataKeyResult = hsmClient.build().generateDataKey(dataKeyRequest);
 
         ByteBuffer plaintextKey = dataKeyResult.getPlaintext();
         ByteBuffer encryptedKey = dataKeyResult.getCiphertextBlob();
@@ -86,9 +83,7 @@ public class KMSEncryptor implements Encryptor {
             return AES.encode(destination);
         } catch (Exception e) {
             e.printStackTrace();
-            Fault fault = new Fault();
-            fault.setErrorCode(500);
-            throw new FaultResponse("Error doing AES encryption: " + e.getLocalizedMessage(), fault);
+            throw new EncryptionException("Error doing AES encryption: " + e.getLocalizedMessage(), e);
         }
     }
 
