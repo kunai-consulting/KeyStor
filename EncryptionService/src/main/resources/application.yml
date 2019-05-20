@@ -18,6 +18,12 @@ spring:
   servlet:
     max-file-size: 500MB
 
+# Actuator settings
+management:
+  info:
+    git:
+      enabled: true
+
 # Encryptor settings...
 encryptor:
   type: aes
