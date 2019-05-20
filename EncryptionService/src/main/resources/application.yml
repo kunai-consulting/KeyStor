@@ -3,13 +3,9 @@
 # here and then overridden using an environment variable passed to docker when the container is executed.
 #
 server:
-  port: 8080
+  port: 80
   servlet:
     context-path: /api
-  tomcat:
-    accesslog:
-      enabled: true
-    pattern: '%t %a "%r" %s (%D ms)'
 
 spring:
   application:

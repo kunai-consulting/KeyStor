@@ -15,6 +15,6 @@ RUN mkdir /encryptor
 WORKDIR /encryptor
 COPY --from=build /repo/target/keyvault-encryption-0.0.2.jar .
 
-EXPOSE 8080
+EXPOSE 80
 
 CMD ["/usr/bin/java", "-jar", "keyvault-encryption-0.0.2.jar", "--spring.profiles.active=swagger"]
