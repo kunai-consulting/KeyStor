@@ -13,8 +13,8 @@ FROM openjdk:11-jre-slim
 
 RUN mkdir /encryptor
 WORKDIR /encryptor
-COPY --from=build /repo/target/eyvault-endpointconnection-0.0.2.jar .
+COPY --from=build /repo/target/keyvault-endpointconnection-0.0.2.jar .
 
 EXPOSE 80
 
-CMD ["/usr/bin/java", "-jar", "eyvault-endpointconnection-0.0.2.jar", "--spring.profiles.active=swagger"]
+CMD ["/usr/bin/java", "-jar", "keyvault-endpointconnection-0.0.2.jar", "--spring.profiles.active=swagger"]
