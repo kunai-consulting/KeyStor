@@ -6,6 +6,8 @@ import com.kunai.keyvault.crypto.DecryptionException;
 import com.kunai.keyvault.crypto.EncryptionComponent;
 import com.kunai.keyvault.crypto.EncryptionException;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +56,15 @@ public class ConnectionController {
      *
      * @param httpRequest The request to proxy with the header value set
      */
-    @ApiOperation(value = "Encrypt data", response = String.class)
+    @ApiOperation(value = "Proxy a request with encryption/decryption", response = String.class)
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "The contents of the request to decrypt", required = true, paramType = "body", example = "<ID>some sensitive data</ID> and then some data and then <CARD>some card data</CARD> and some more data and then <CARD>some other card data</CARD> and then finally <ID>some other sensitive data</ID> and the something."),
+            @ApiImplicitParam(name = "proxy-url", value = "The URL to send the request to", required = true, paramType = "header", example = "http://httpbin.org/post"),
+            @ApiImplicitParam(name = "encryption-regex0", value = "A regex used to match and encrypt response data.  You can have 0 though n of them", required = false, paramType = "header", example = "encryption-regex1:(?<=<ID>).*?(?=</ID>)"),
+            @ApiImplicitParam(name = "encryption-type0", value = "The type of encryption for encryption n, one of ssn, card_data, generic", required = false, paramType = "header", example = "encryption-type1:generic"),
+            @ApiImplicitParam(name = "decryption-regex0", value = "A regex used to match and decrypt request data.  You can have 0 though n of them", required = false, paramType = "header", example = "decryption-regex1:(?<=<ID>).*?(?=</ID>)"),
+            @ApiImplicitParam(name = "decryption-type0", value = "The type of decryption for decryption n, one of ssn, card_data, generic", required = false, paramType = "header", example = "decryption-type1:generic")
+    })
     @RequestMapping(value = "/proxy", method = {GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS, TRACE})
     public void proxyPost(HttpServletResponse httpResponse, HttpServletRequest httpRequest) throws IOException {
         proxy(HttpMethod.resolve(httpRequest.getMethod()), httpResponse, httpRequest, httpRequest.getInputStream());
