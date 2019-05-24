@@ -3,10 +3,11 @@ package com.kunai.keyvault.crypto.aws_kms;
 import com.amazonaws.services.kms.AWSKMS;
 import com.amazonaws.services.kms.AWSKMSClientBuilder;
 import com.amazonaws.services.kms.model.DecryptRequest;
+import com.kunai.keyvault.config.HSM;
+import com.kunai.keyvault.crypto.DecryptionException;
 import com.kunai.keyvault.crypto.Decryptor;
 import com.kunai.keyvault.crypto.aes.AES;
-import com.kunai.keyvault.crypto.voltage.vibesimple.Fault;
-import com.kunai.keyvault.crypto.voltage.vibesimple.FaultResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -17,19 +18,13 @@ import java.util.Arrays;
 public class KMSDecryptor implements Decryptor {
 
     public String keyId;
-    protected AWSKMS kms;
 
+    @Autowired
+    private HSM hsmClient;
 
-    @Override
-    public void init() {
-        kms = getClient();
+    public KMSDecryptor(String keyId) {
+        this.keyId = keyId;
     }
-
-    @Override
-    public void destroy() {
-
-    }
-
 
     /**
      * Create an AWS KMS client.
@@ -42,30 +37,30 @@ public class KMSDecryptor implements Decryptor {
     /**
      * @param socialSecurityNumber
      * @return returns java.lang.String
-     * @throws FaultResponse
+     * @throws DecryptionException
      */
     @Override
-    public String accessSocialSecurityNumber(String socialSecurityNumber) throws FaultResponse {
+    public String accessSocialSecurityNumber(String socialSecurityNumber) throws DecryptionException {
         return accessGenericData(socialSecurityNumber);
     }
     /**
      * @param dataIn
      * @param format
      * @return returns java.lang.String
-     * @throws FaultResponse
+     * @throws DecryptionException
      */
     @Override
-    public String accessFormattedData(String dataIn, String format) throws FaultResponse {
+    public String accessFormattedData(String dataIn, String format) throws DecryptionException {
         return accessGenericData(dataIn);
     }
 
     /**
      * @param dataIn
      * @return returns byte[]
-     * @throws FaultResponse
+     * @throws DecryptionException
      */
     @Override
-    public String accessGenericData(String dataIn) throws FaultResponse {
+    public String accessGenericData(String dataIn) throws DecryptionException {
         byte[] decodedData = AES.decode(dataIn);
         byte[] encryptedKeyBytes = Arrays.copyOfRange(decodedData,0, 151);
         byte[] originalEncrypted = Arrays.copyOfRange(decodedData, 151, decodedData.length);
@@ -74,16 +69,14 @@ public class KMSDecryptor implements Decryptor {
         ByteBuffer ciphertextBlob = ByteBuffer.wrap(encryptedKeyBytes);
 
         DecryptRequest req = new DecryptRequest().withCiphertextBlob(ciphertextBlob);
-        ByteBuffer plainText = kms.decrypt(req).getPlaintext();
+        ByteBuffer plainText = hsmClient.build().decrypt(req).getPlaintext();
 
         String ret;
         try {
             ret = new String(AES.unPackBytes(AES.decrypt(originalEncrypted, plainText.array())));
         } catch (Exception e) {
             e.printStackTrace();
-            Fault fault = new Fault();
-            fault.setErrorCode(500);
-            throw new FaultResponse("Error doing AES decryption: " + e.getLocalizedMessage(), fault);
+            throw new DecryptionException("Error doing AES decryption: " + e.getLocalizedMessage(), e);
         }
 
         return ret;

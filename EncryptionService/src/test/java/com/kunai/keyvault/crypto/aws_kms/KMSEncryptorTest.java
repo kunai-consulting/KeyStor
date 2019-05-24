@@ -4,10 +4,6 @@ public class KMSEncryptorTest {
 
     //TODO: Fix and re-enable with mocking
 /*
-    static {
-    }
-
-
     private KMSEncryptor encryptor;
 
     @Before

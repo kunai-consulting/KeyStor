@@ -1,42 +1,35 @@
 package com.kunai.keyvault.crypto;
 
-import com.kunai.keyvault.crypto.voltage.vibesimple.FaultResponse;
-
 /**
  * Created by acooley on 8/27/16.
  */
 public interface Encryptor {
-
-    public void init();
-    public void destroy();
-
-
     /**
      *
-     * @param socialSecurityNumber
+     * @param socialSecurityNumber a String representing a Social Security Number of a person.
      * @return
      *     returns java.lang.String
-     * @throws FaultResponse
+     * @throws EncryptionException if the socialSecurityNumber cannot be encoded.
      */
-    public String protectSocialSecurityNumber(String socialSecurityNumber) throws FaultResponse;
+    public String protectSocialSecurityNumber(String socialSecurityNumber) throws EncryptionException;
 
     /**
      *
-     * @param format
-     * @param dataIn
+     * @param format A String representing the desired format of the dataIn parameter.
+     * @param dataIn A String representing a value that has to be encrypted.
      * @return
      *     returns java.lang.String
-     * @throws FaultResponse
+     * @throws EncryptionException if the encoding fails.
      */
-    public String protectFormattedData(String dataIn, String format) throws FaultResponse;
+    public String protectFormattedData(String dataIn, String format) throws EncryptionException;
 
     /**
      *
-     * @param dataIn
+     * @param dataIn a String representing a value that has to be encrypted
      * @return
      *     returns byte[]
-     * @throws FaultResponse
+     * @throws EncryptionException if the encoding fails.
      */
-    public String protectGenericData(String dataIn) throws FaultResponse;
+    public String protectGenericData(String dataIn) throws EncryptionException;
 
 }

@@ -1,6 +1,6 @@
 # Introduction
 
-See ../README.md for an introduction
+See https://github.com/kunai-consulting/KeyStor for an introduction
 
 # Overview
 
@@ -8,9 +8,18 @@ The Endpoint Connection Service is used to do decryption and encryption as you a
 service should not be visible publicly.  Instead you should be connecting only the applications that need it to the
 service with some form of strong two way authenticated transport level secruity (e.g. a VPN)
 
-* To run the server run (replace the version with the correct one).
+***Docker***
 
-        java -jar target/keyvault-encryption-0.0.1-rc5-SNAPSHOT.jar server example.yml
+To run the server with the Docker image (https://hub.docker.com/r/kunai/keystor-encryption) make sure you set the following environment vars exactly the same
+for both the encryption service and the endpoint connection service:
+* ENCRYPTOR_TYPE: Either 'aes' or 'aks'
+* ENCRYPTOR_KEY: This should be the aks key ID if the above is 'aks', or some _randomly_ generated, *carefully* managed string of 16 ASCII chars.
+It should be set in production no matter what.
+
+
+***CLI***
+
+To run the server without Docker run (replace the version with the correct one)...
 
 **Encryption Service**
 ----
@@ -18,7 +27,7 @@ service with some form of strong two way authenticated transport level secruity 
  
 * **URL**
 
-  proxy
+  /api/proxy
 
 * **Method:**
 
@@ -54,7 +63,7 @@ service with some form of strong two way authenticated transport level secruity 
 * **Sample Call:**
 
 ```
-curl --data "some data and then <CARD>{paste the value returned from the encryptor here}</CARD>" --header "proxy-url: http://httpbin.org/post" --header "decryption-regex0: (?<=<CARD>).*?(?=</CARD>)" --header "decryption-type0: card_data" --header "Content-Type: text/plain" --header "Accept: text/plain" http://localhost:8080/proxy
+curl --data "some data and then <CARD>{paste the value returned from the encryptor here}</CARD>" --header "proxy-url: http://httpbin.org/post" --header "decryption-regex0: (?<=<CARD>).*?(?=</CARD>)" --header "decryption-type0: card_data" --header "Content-Type: text/plain" --header "Accept: text/plain" http://localhost:80/api/proxy
 ```
 * **Notes:**
 
@@ -63,7 +72,7 @@ curl --data "some data and then <CARD>{paste the value returned from the encrypt
   
 * **URL**
 
-  healthcheck
+  /api/actuator/health
 
 * **Method:**
 
@@ -82,7 +91,7 @@ curl --data "some data and then <CARD>{paste the value returned from the encrypt
 * **Sample Call:**
 
 ```
-curl http://localhost:8080/healthcheck
+curl http://localhost:80/api/actuator/health
 ```
 * **Notes:**
 

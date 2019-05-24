@@ -1,40 +1,35 @@
 package com.kunai.keyvault.crypto;
 
-import com.kunai.keyvault.crypto.voltage.vibesimple.FaultResponse;
-
 /**
  * Created by acooley on 8/27/16.
  */
 public interface Decryptor {
-
-    public void init();
-    public void destroy();
 
 
     /**
      *
      * @param socialSecurityNumber an String representing a SSN
      * @return java.lang.String
-     * @throws FaultResponse if getting the info fails.
+     * @throws DecryptionException if getting the info fails.
      *
      */
-    public String accessSocialSecurityNumber(String socialSecurityNumber) throws FaultResponse;
+    public String accessSocialSecurityNumber(String socialSecurityNumber) throws DecryptionException;
 
     /**
      *
      * @param format the format of the original string
      * @param dataIn the original String
      * @return java.lang.String
-     * @throws FaultResponse
+     * @throws DecryptionException
      */
-    public String accessFormattedData(String dataIn, String format) throws FaultResponse;
+    public String accessFormattedData(String dataIn, String format) throws DecryptionException;
 
     /**
      *
      * @param dataIn
      * @return byte[]
-     * @throws FaultResponse
+     * @throws DecryptionException
      */
-    public String accessGenericData(String dataIn) throws FaultResponse;
+    public String accessGenericData(String dataIn) throws DecryptionException;
 
 }

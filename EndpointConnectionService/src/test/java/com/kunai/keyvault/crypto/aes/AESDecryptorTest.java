@@ -1,6 +1,5 @@
 package com.kunai.keyvault.crypto.aes;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,22 +9,13 @@ import static org.junit.Assert.assertThat;
 
 
 public class AESDecryptorTest {
-
-    static {
-    }
-
+    private static String testKey = "11CDEF0123456789";
 
     private AESDecryptor decryptor;
 
     @Before
     public void setUp() throws Exception {
-        decryptor = new AESDecryptor();
-        decryptor.init();
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        decryptor.destroy();
+        decryptor = new AESDecryptor(testKey.getBytes());
     }
 
     /**
@@ -36,7 +26,7 @@ public class AESDecryptorTest {
     public void testCardDataDecrypt() throws Exception {
         String data = "4012888888881881";
         String encryptedData = AES.encode(AES.encrypt(AES.pack(data),
-                decryptor.encryptionKey));
+                testKey.getBytes()));
 
 
         assertFalse(encryptedData.equals(data));

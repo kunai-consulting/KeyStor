@@ -1,11 +1,5 @@
 package com.kunai.keyvault.crypto;
 
-import com.kunai.keyvault.crypto.voltage.vibesimple.FaultResponse;
-import com.kunai.keyvault.crypto.voltage.vibesimple.VibeSimple;
-import com.kunai.keyvault.resources.ConnectionResource;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,25 +9,28 @@ import java.util.regex.Pattern;
  * Created by acooley on 5/23/15.
  */
 public class CryptoOp {
-    public static String FORMAT_FIRST_4_LAST_4_SST = "First 4 Last 4 SST";
+    private static final String FORMAT_FIRST_4_LAST_4_SST = "First 4 Last 4 SST";
 
-    public static final String ENCRYPT_PREFIX = "encrypted {";
-    public static final String ENCRYPT_POSTFIX = "}";
+    private static final String ENCRYPT_PREFIX = "encrypted {";
+    private static final String ENCRYPT_POSTFIX = "}";
 
-    public static final String TEST_ENCRYPT = "test";
-    public static final String GENERIC_ENCRYPT = "generic";
-    public static final String SSN_ENCRYPT = "ssn";
-    public static final String PCI_CARD_MASKED_TOKENIZE = "card_data";
+    private static final String TEST_ENCRYPT = "test";
+    private static final String GENERIC_ENCRYPT = "generic";
+    private static final String SSN_ENCRYPT = "ssn";
+    private static final String PCI_CARD_MASKED_TOKENIZE = "card_data";
 
     private Pattern pattern;
     private String type = "unset";
+
+    private EncryptionComponent encryptionComponent;
 
     /**
      * Create an encryption operation
      * @param regex Regular expression used to find the data
      * @param type Type of encryption.  Must be one of the public static ints associated with the class (e.g. TEST_ENCRYPT, PCI_CARD_MASKED_TOKENIZE)
      */
-    public CryptoOp(String regex, String type) {
+    public CryptoOp(String regex, String type, EncryptionComponent encryptionComponent) {
+        this.encryptionComponent = encryptionComponent;
         this.pattern = Pattern.compile(regex);
         this.type = type;
     }
@@ -42,7 +39,8 @@ public class CryptoOp {
      * Create an encryption operation and set the type later
      * @param regex Regular expression used to find the data
      */
-    public CryptoOp(String regex) {
+    public CryptoOp(String regex, EncryptionComponent encryptionComponent) {
+        this.encryptionComponent = encryptionComponent;
         this.pattern = Pattern.compile(regex);
     }
 
@@ -63,7 +61,7 @@ public class CryptoOp {
      * @param type The type of the crypto operation
      */
     public void setType(String type) {
-        this.type = new String(type);
+        this.type = type;
     }
 
     /**
@@ -71,7 +69,7 @@ public class CryptoOp {
      * @param data The data containing strings that might need encryption
      * @return The data with the strings encrypted
      */
-    public String encrypt(String data) throws EncryptionException, FaultResponse, IOException {
+    public String encrypt(String data) throws EncryptionException {
         Matcher matcher = pattern.matcher(data);
         StringBuffer encryptedData = new StringBuffer();
 
@@ -88,19 +86,17 @@ public class CryptoOp {
      * @param data The data containing strings that might need decryption
      * @return The data with the strings decrypted
      * @throws DecryptionException
-     * @throws FaultResponse
-     * @throws MalformedURLException
      */
-    public String decrypt(String data) throws DecryptionException, FaultResponse, MalformedURLException {
+    public String decrypt(String data) throws DecryptionException {
         Matcher matcher = pattern.matcher(data);
-        StringBuffer encryptedData = new StringBuffer();
+        StringBuffer decryptedData = new StringBuffer();
 
         while (matcher.find()) {
-            matcher.appendReplacement(encryptedData, decryptOp(data.substring(matcher.start(), matcher.end()), type));
+            matcher.appendReplacement(decryptedData, decryptOp(data.substring(matcher.start(), matcher.end()), type));
         }
-        matcher.appendTail(encryptedData);
+        matcher.appendTail(decryptedData);
 
-        return encryptedData.toString();
+        return decryptedData.toString();
     }
 
     /**
@@ -109,26 +105,25 @@ public class CryptoOp {
      * @param type The type of encryption to perform
      * @return the encrypted string
      * @throws EncryptionException
-     * @throws FaultResponse
-     * @throws IOException
      */
-    private static String encryptOp(String unencrypted, String type) throws EncryptionException, FaultResponse, IOException {
+    private String encryptOp(String unencrypted, String type) throws EncryptionException {
 
         switch (type) {
             case TEST_ENCRYPT:
                 return ENCRYPT_PREFIX + unencrypted + ENCRYPT_POSTFIX;
 
             case GENERIC_ENCRYPT:
-                return ConnectionResource.encryptor.protectGenericData(unencrypted);
+                return encryptionComponent.encryptor.protectGenericData(unencrypted);
 
             case SSN_ENCRYPT:
-                return ConnectionResource.encryptor.protectSocialSecurityNumber(unencrypted);
+                return encryptionComponent.encryptor.protectSocialSecurityNumber(unencrypted);
 
             case PCI_CARD_MASKED_TOKENIZE:
-                return ConnectionResource.encryptor.protectFormattedData(unencrypted, FORMAT_FIRST_4_LAST_4_SST);
+                return encryptionComponent.encryptor.protectFormattedData(unencrypted, FORMAT_FIRST_4_LAST_4_SST);
 
             default:
-                throw new EncryptionException("Unknown encryption type during encryption");
+                throw new EncryptionException("Unknown encryption type during encryption",
+                        new RuntimeException("Unknown encryption type during encryption"));
         }
     }
 
@@ -138,26 +133,24 @@ public class CryptoOp {
      * @param type The type of decryption to perform
      * @return the decrypted string
      * @throws DecryptionException
-     * @throws FaultResponse
-     * @throws MalformedURLException
      */
-    private static String decryptOp(String encrypted, String type) throws DecryptionException, FaultResponse, MalformedURLException {
-        VibeSimple service;
+    private String decryptOp(String encrypted, String type) throws DecryptionException {
 
         switch (type) {
             case TEST_ENCRYPT:
                 return encrypted.substring(ENCRYPT_PREFIX.length(), encrypted.length() - ENCRYPT_POSTFIX.length());
             case GENERIC_ENCRYPT:
-                return ConnectionResource.decryptor.accessGenericData(encrypted);
+                return encryptionComponent.decryptor.accessGenericData(encrypted);
 
             case SSN_ENCRYPT:
-                return ConnectionResource.decryptor.accessSocialSecurityNumber(encrypted);
+                return encryptionComponent.decryptor.accessSocialSecurityNumber(encrypted);
 
             case PCI_CARD_MASKED_TOKENIZE:
-                return ConnectionResource.decryptor.accessFormattedData(encrypted, FORMAT_FIRST_4_LAST_4_SST);
+                return encryptionComponent.decryptor.accessFormattedData(encrypted, FORMAT_FIRST_4_LAST_4_SST);
 
             default:
-                throw new DecryptionException("Unknow encryption type during decryption");
+                throw new DecryptionException("Unknown encryption type during decryption",
+                        new RuntimeException("Unknown encryption type during decryption"));
         }
     }
 }

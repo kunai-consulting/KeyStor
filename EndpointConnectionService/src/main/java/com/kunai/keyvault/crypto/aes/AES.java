@@ -19,7 +19,7 @@ public class AES {
      * @param bytes This is the original String
      * @param encryptionKey This is a value taken from example.yml in Encryptor Settings
      * @return an array of bytes that is the encrypted String.
-     * @throws Exception if the encryption fails.
+     * @throws Exception if there's no way to get the Cipher, the SecretKey or the instance of the secureRandom.
      */
     public static byte[] encrypt(byte[] bytes, byte[] encryptionKey) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding","SunJCE");
@@ -47,7 +47,7 @@ public class AES {
      * @param cipherText it receives the array of bytes of the encrypted String
      * @param encryptionKey This is a value taken from example.yml in Encryptor Settings
      * @return the original decrypted String in a byte array format.
-     * @throws Exception if the decryption fails.
+     * @throws Exception if Cipher or Secret Key is not generated
      */
     public static byte[] decrypt(byte[] cipherText, byte[] encryptionKey) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding","SunJCE");
@@ -67,7 +67,7 @@ public class AES {
     /**
      * It takes the original String in a byte array and pack the bytes depending of the ASCII characters.
      * @param bytes The original String received in a byte[]
-     * @return packed byte[]
+     * @return byte[]
      */
     public static byte[] pack(byte[] bytes) {
         int length = bytes.length + 4;
@@ -90,7 +90,7 @@ public class AES {
      *
      * @param string The original clear text String
      * @return byte[] the execution of pack function
-     * @throws UnsupportedEncodingException if the encoding fails.
+     * @throws UnsupportedEncodingException if the indicated coding type is not recognized.
      */
     public static byte[] pack(String string) throws UnsupportedEncodingException {
         return pack(string.getBytes("UTF-8"));
@@ -111,7 +111,7 @@ public class AES {
      *
      * @param bytes a byte[] taken from the encrypted array of bytes
      * @return String containing the original decrypted value
-     * @throws UnsupportedEncodingException
+     * @throws UnsupportedEncodingException if the indicated coding type is not recognized.
      */
     public static String unPackString(byte[] bytes) throws UnsupportedEncodingException {
         return new String(unPackBytes(bytes), "UTF-8");

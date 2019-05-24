@@ -1,15 +1,25 @@
 # Introduction
 
-See ../README.md for an introduction
+See https://github.com/kunai-consulting/KeyStor for an introduction
 
 # Overview
 
 The Encryption Service is used to do encryption as close to the end user as possible.  Ideally this is outside your data center
 so the service should be public facing and should not have access to other services like the Endpoint Connection Service.
 
-* To run the server run (replace the version with the correct one).
+***Docker***
 
-        java -jar target/keyvault-encryption-0.0.1-rc5-SNAPSHOT.jar server example.yml
+To run the server with the Docker image (https://hub.docker.com/r/kunai/keystor-encryption) make sure you set the following environment vars exactly the same
+for both the encryption service and the endpoint connection service:
+* ENCRYPTOR_TYPE: Either 'aes' or 'aks'
+* ENCRYPTOR_KEY: This should be the aks key ID if the above is 'aks', or some _randomly_ generated, *carefully* managed string of 16 ASCII chars.
+It should be set in production no matter what.
+
+***CLI***
+
+To run the server without Docker run (replace the version with the correct one)...
+
+        java -jar target/keyvault-encryption-0.0.2.jar server example.yml
 
 **Encryption Service**
 ----
@@ -45,7 +55,7 @@ so the service should be public facing and should not have access to other servi
 * **Sample Call:**
 
 ```
-curl --data "4012888888881880" http://localhost:8080/encrypt?type=card_data
+curl --data "4012888888881880" http://localhost:80/api/encrypt?type=card_data
 ```
 * **Notes:**
 
@@ -73,7 +83,7 @@ curl --data "4012888888881880" http://localhost:8080/encrypt?type=card_data
 * **Sample Call:**
 
 ```
-curl http://localhost:8080/healthcheck
+curl http://localhost:80/api/actuator/health
 ```
 * **Notes:**
 

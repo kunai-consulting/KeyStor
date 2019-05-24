@@ -1,6 +1,5 @@
 package com.kunai.keyvault.crypto.aes;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,22 +9,13 @@ import static org.junit.Assert.assertThat;
 
 
 public class AESEncryptorTest {
-
-    static {
-    }
-
+    private static String testKey = "11CDEF0123456789";
 
     private AESEncryptor encryptor;
 
     @Before
     public void setUp() throws Exception {
-        encryptor = new AESEncryptor();
-        encryptor.init();
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        encryptor.destroy();
+        encryptor = new AESEncryptor(testKey.getBytes());
     }
 
     /**
@@ -38,8 +28,6 @@ public class AESEncryptorTest {
         String encryptedData = encryptor.protectFormattedData(data, null);
 
         assertFalse(encryptedData.equals(data));
-        assertThat(AES.unPackString(AES.decrypt(AES.decode(encryptedData), encryptor.encryptionKey)), is(data));
+        assertThat(AES.unPackString(AES.decrypt(AES.decode(encryptedData), testKey.getBytes())), is(data));
     }
-
-    //TODO: Add tests for the rest of the APIs
 }

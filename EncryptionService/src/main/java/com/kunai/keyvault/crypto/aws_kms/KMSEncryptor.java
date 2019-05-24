@@ -1,7 +1,5 @@
 package com.kunai.keyvault.crypto.aws_kms;
 
-import com.amazonaws.services.kms.AWSKMS;
-import com.amazonaws.services.kms.AWSKMSClientBuilder;
 import com.amazonaws.services.kms.model.GenerateDataKeyRequest;
 import com.amazonaws.services.kms.model.GenerateDataKeyResult;
 import com.kunai.keyvault.config.HSM;
@@ -24,14 +22,6 @@ public class KMSEncryptor implements Encryptor {
 
     public KMSEncryptor(String keyId) {
         this.keyId = keyId;
-    }
-
-    /**
-     * Create an AWS KMS client.
-     * @return Create new instance of builder with all defaults set with the DefaultAWSCredentialsProviderChain
-     */
-    private AWSKMS getClient() {
-        return AWSKMSClientBuilder.defaultClient();
     }
 
     /**

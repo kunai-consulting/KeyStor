@@ -1,3 +1,0 @@
-com.kunai.keyvault.crypto.aes.AESDecryptorFactory
-com.kunai.keyvault.crypto.aws_kms.KMSDecryptorFactory
-com.kunai.keyvault.crypto.voltage.VoltageDecryptorFactory

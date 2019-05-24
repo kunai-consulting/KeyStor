@@ -1,0 +1,26 @@
+# This is the default configuration file for this application that gets packaged in Docker.  Things that need to be
+# delivered to the application at runtime, such as security credentials, should be set to 'override_with_environment'
+# here and then overridden using an environment variable passed to docker when the container is executed.
+#
+server:
+  port: 80
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: 'EncryptionService'
+
+  servlet:
+    max-file-size: 500MB
+
+# Actuator settings
+management:
+  info:
+    git:
+      enabled: true
+
+# Encryptor settings...
+encryptor:
+  type: aes
+  key: "ABCDEF0123456789"
