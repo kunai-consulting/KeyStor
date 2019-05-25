@@ -246,8 +246,8 @@ public class ConnectionController {
         try {
             proxyResponse = restTemplate.exchange(requestEntity, byte[].class);
         } catch (RestClientException e) {
-            LOGGER.error("[{}] Exception while making the proxied request: {}", sessionId, e.getLocalizedMessage());
-            httpResponse.setStatus(500);
+            LOGGER.warn("[{}] Exception while making the proxied request: {}", sessionId, e.getLocalizedMessage());
+            httpResponse.setStatus(Integer.parseInt(e.getLocalizedMessage().substring(0, 3)));
             return;
         }
 
@@ -255,55 +255,54 @@ public class ConnectionController {
         //build the response
         if (proxyResponse.getStatusCode().isError()) {
             LOGGER.warn("[{}] {} proxied to: {} returned response status: {}", sessionId, type, proxyUrl, proxyResponse.getStatusCode());
-        } else {
-            LOGGER.debug("[{}] Response status: {}", sessionId, proxyResponse.getStatusCode());
+        }
+        LOGGER.debug("[{}] Response status: {}", sessionId, proxyResponse.getStatusCode());
 
-            // perform encryption on the response body
-            byte[] responseData = proxyResponse.getBody();
-            if (responseData != null) {
-                it = encryptions.entrySet().iterator();
-                while (it.hasNext()) {
-                    Map.Entry<Integer, CryptoOp> pair = (Map.Entry) it.next();
-                    try {
-                        responseData = pair.getValue().encrypt(new String(responseData)).getBytes();
-                    } catch (EncryptionException e) {
-                        LOGGER.error("[{}] unable to encrypt {}", sessionId, e.getMessage());
-                        httpResponse.setStatus(400);
-                        return;
-                    }
+        // perform encryption on the response body
+        //Build the response...
+        httpResponse.setStatus(proxyResponse.getStatusCodeValue());
 
-                    it.remove();
+        // Copy the headers...
+        Set<String> proxyResponseHeaders = proxyResponse.getHeaders().keySet();
+        for (String header : proxyResponseHeaders) {
+            List<String> headerList = proxyResponse.getHeaders().get(header);
+            if (headerList != null) {
+                for (String s : headerList) {
+                    httpResponse.addHeader(header, s);
                 }
-
-            } else {
-                LOGGER.debug("[{}] {} proxied to: {} had null entity data", sessionId, type, proxyUrl);
-            }
-            //Build the response...
-            httpResponse.setStatus(proxyResponse.getStatusCodeValue());
-
-            // Copy the headers...
-            Set<String> proxyResponseHeaders = proxyResponse.getHeaders().keySet();
-            for (String header : proxyResponseHeaders) {
-                List<String> headerList = proxyResponse.getHeaders().get(header);
-                if (headerList != null) {
-                    for (String s : headerList) {
-                        httpResponse.addHeader(header, s);
-                    }
-                }
-            }
-
-            // Copy the data...
-            try {
-                OutputStream outputStream = httpResponse.getOutputStream();
-                if (responseData != null) {
-                    outputStream.write(responseData);
-                    outputStream.flush(); // not sure if this is needed?
-                }
-            } catch (IOException e) {
-                LOGGER.error("[{}] Exception while writing proxy response to the response: {}", sessionId, e.getLocalizedMessage());
-                httpResponse.setStatus(500);
             }
         }
-    }
 
+        byte[] responseData = proxyResponse.getBody();
+        if (responseData != null) {
+            it = encryptions.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry<Integer, CryptoOp> pair = (Map.Entry) it.next();
+                try {
+                    responseData = pair.getValue().encrypt(new String(responseData)).getBytes();
+                } catch (EncryptionException e) {
+                    LOGGER.error("[{}] unable to encrypt {}", sessionId, e.getMessage());
+                    httpResponse.setStatus(400);
+                    return;
+                }
+
+                it.remove();
+            }
+
+        } else {
+            LOGGER.debug("[{}] {} proxied to: {} had null entity data", sessionId, type, proxyUrl);
+        }
+
+        // Copy the data...
+        try {
+            OutputStream outputStream = httpResponse.getOutputStream();
+            if (responseData != null) {
+                outputStream.write(responseData);
+                outputStream.flush(); // not sure if this is needed?
+            }
+        } catch (IOException e) {
+            LOGGER.error("[{}] Exception while writing proxy response to the response: {}", sessionId, e.getLocalizedMessage());
+            httpResponse.setStatus(500);
+        }
+    }
 }
