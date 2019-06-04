@@ -84,17 +84,14 @@ The **keyvault** is the storage for your cryptographic keys.  KeyStor currently 
 
 * Simple AES encryption with a single key
 * Amazon KMS Keys with envelope encryption
-* HP Voltage
 
 Use simple AES encryption if you are looking for a low cost, but safe, solution and don't need the features provided by HP Voltage. AES encryption will return to you a simple AES encrypted cypher containing your data.  For each cryptographic key you use in your back end you can encrypt up to 250 million terabytes without needing to worry about key rotation as long as the security of your secure data center is maintained.
 
 Use KMS Keys if you are going to run KeyStor in AWS.  They make it much easier to manage and secure your keys, have different keys for development and production, etc.  Also, with AWS keys you can enable key rotation.
 
-Use HP Voltage if you want tokenization, format preserving encryption, management of end-point encryption devices (e.g. encrypting pin pads), data masking, access to decryption through the endpoint connection service based on roles, and all of the other good stuff that makes Voltage a great product.
-
 ### Quick Start
 
-Each KeyStor service consists of a Dropwizard based fat JAR file.  You can run the JAR on anything with the Java 8 Runtime Environment installed on it.  
+Each KeyStor service consists of a Spring Boot based fat JAR file.  You can run the JAR on anything with the Java 8 Runtime Environment installed on it.  
 
 We like to run things in Docker because it makes managing the deployment to production a little easier.  If you are using Docker you can run both services on the same instances in the same cluster. We like to run them on separate ones.  This allows us to keep the public facing Encryption Service separated from the private Endpoint Connection Service with minimum complexity in routing.
 
@@ -172,7 +169,7 @@ curl --data "some data and then <CARD>{paste the value returned from the encrypt
 
 Should return an encryption like...
 
-```javascript
+```
 {
   "args": {}, 
   "data": "some data and then <CARD>4012888888881880</CARD>", 
@@ -199,28 +196,8 @@ Note that for testing and development purposes the example configuration uses an
 
 We like using Docker for deployment because it makes reving and scaling your service so easy.  If you want to build for Docker start by installing docker for your platform then...
 
-Open the configuration file used with docker images and set it up as needed...
-
-```
-vi src/main/resources/docker-config.yml
-```
-
-The configuration file for the Docker builds is set up to use KMS keys, so you will either need to change the encryptor and decryptor settings to work with your Keystor strategy or set the KeyId to the ID string for the KMS Key ID you want to use.  Save it and build the Docker image...
-
-```
-mvn package
-mvn docker:build
-```
-
-Now if you do...
-
-```
-docker images
-```
-
-You should see your built out docker image.
-
-Repeat the same process for the other service.
+https://cloud.docker.com/u/kunai/repository/docker/kunai/keystor-connection
+https://cloud.docker.com/u/kunai/repository/docker/kunai/keystor-encryption
 
 #### Deployment
 
@@ -246,8 +223,8 @@ If you don't have a client which collects sensitive data because it's passed to 
 
 First, you're going to want to call the encryptor right when you collect the information you want to encrypt.  If possible you'll want to do it from the browser or app on the client's device.  That will keep your back-end business logic from ever seeing any encrypted data.  You'll make the call using a simple put request like this one...
 
-```javascript
-Need to write a put request in JavaScript
+```
+curl -X POST "http://34.222.151.65/api/encrypt?type=generic" -H "accept: */*" -H "Content-Type: application/json" -d "Smith"
 ```
 
 You're done!  Now you can take what was returned from that call you'll and pass it to your business logic, store it, etc. and not have to worry about it's safety.  You can find the full documentation for the encryption service in the README.md file in the directory for the Encryption Service.

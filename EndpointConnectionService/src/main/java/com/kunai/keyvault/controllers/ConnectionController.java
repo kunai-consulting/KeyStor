@@ -17,6 +17,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -65,6 +66,7 @@ public class ConnectionController {
             @ApiImplicitParam(name = "decryption-regex0", value = "A regex used to match and decrypt request data.  You can have 0 though n of them", required = false, paramType = "header", example = "decryption-regex1:(?<=<ID>).*?(?=</ID>)"),
             @ApiImplicitParam(name = "decryption-type0", value = "The type of decryption for decryption n, one of ssn, card_data, generic", required = false, paramType = "header", example = "decryption-type1:generic")
     })
+    @CrossOrigin()
     @RequestMapping(value = "/proxy", method = {GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS, TRACE})
     public void proxyPost(HttpServletResponse httpResponse, HttpServletRequest httpRequest) throws IOException {
         proxy(HttpMethod.resolve(httpRequest.getMethod()), httpResponse, httpRequest, httpRequest.getInputStream());

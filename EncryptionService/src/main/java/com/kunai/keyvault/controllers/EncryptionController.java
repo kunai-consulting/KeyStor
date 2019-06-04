@@ -7,10 +7,7 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
@@ -31,6 +28,7 @@ public class EncryptionController {
      * @return Returns the response from the end-point or 400 (malformed request) if the header value was not set.
      */
     @ApiOperation(value="Encrypt data", response = String.class)
+    @CrossOrigin()
     @PostMapping(path = "encrypt")
     @ResponseBody
     public String encryptPost(
