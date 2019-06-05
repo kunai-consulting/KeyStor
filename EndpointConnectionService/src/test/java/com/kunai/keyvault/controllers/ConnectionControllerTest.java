@@ -58,7 +58,7 @@ public class ConnectionControllerTest {
     @Test
     public void testPassThroughRedirect() throws Exception {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("proxy-url", "http://httpbin.org/absolute-redirect/2");
+        headers.add("connection-url", "http://httpbin.org/absolute-redirect/2");
         HttpEntity<String> request = new HttpEntity<>(headers);
         ResponseEntity<String> responseBody = restTemplate.exchange("http://localhost:" + port + "/api/proxy", HttpMethod.GET, request, String.class);
         assertTrue(responseBody.getStatusCode().is2xxSuccessful());
@@ -73,7 +73,7 @@ public class ConnectionControllerTest {
         String data = "somedata";
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("proxy-url", "http://httpbin.org/post");
+        headers.add("connection-url", "http://httpbin.org/post");
         HttpEntity<String> request = new HttpEntity<>(data, headers);
         ResponseEntity<String> responseBody = restTemplate.exchange("http://localhost:" + port + "/api/proxy", HttpMethod.POST, request, String.class);
         assertTrue(responseBody.getBody().toLowerCase().contains(data));
@@ -92,7 +92,7 @@ public class ConnectionControllerTest {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-        headers.add("proxy-url", "http://httpbin.org/post");
+        headers.add("connection-url", "http://httpbin.org/post");
         HttpEntity request = new HttpEntity<>(body, headers);
         ResponseEntity<String> responseBody = restTemplate.exchange("http://localhost:" + port + "/api/proxy", HttpMethod.POST, request, String.class);
         assertFalse(responseBody.getStatusCode().isError());
@@ -107,7 +107,7 @@ public class ConnectionControllerTest {
         String data = "somedata";
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("proxy-url", "http://httpbin.org/put");
+        headers.add("connection-url", "http://httpbin.org/put");
         HttpEntity<String> request = new HttpEntity<>(data, headers);
         ResponseEntity<String> responseBody = restTemplate.exchange("http://localhost:" + port + "/api/proxy", HttpMethod.PUT, request, String.class);
         assertTrue(responseBody.getBody().toLowerCase().contains(data));
@@ -121,7 +121,7 @@ public class ConnectionControllerTest {
     public void testSimpleEncrypt() throws Exception {
         String data = "<ID>some sensitive data</ID> and then some data and then <CARD>some card data</CARD> and some more data and then <CARD>some other card data</CARD> and then finally <ID>some other sensitive data</ID> and the something.";
         HttpHeaders headers = new HttpHeaders();
-        headers.add("proxy-url", "http://httpbin.org/put");
+        headers.add("connection-url", "http://httpbin.org/put");
         headers.add("encryption-regex0", "(?<=<ID>).*?(?=</ID>)");
         headers.add("encryption-type0", "test");
         headers.add("encryption-regex1", "(?<=<CARD>).*?(?=</CARD>)");
@@ -142,7 +142,7 @@ public class ConnectionControllerTest {
         String data = "<ID>encrypted {some sensitive data}</ID> and then some data and then <CARD>encrypted {some card data}</CARD> and some more data and then <CARD>encrypted {some other card data}</CARD> and then finally <ID>encrypted {some other sensitive data}</ID> and the something.";
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("proxy-url", "http://httpbin.org/put");
+        headers.add("connection-url", "http://httpbin.org/put");
         headers.add("decryption-regex0", "(?<=<ID>).*?(?=</ID>)");
         headers.add("decryption-type0", "test");
         headers.add("decryption-regex1", "(?<=<CARD>).*?(?=</CARD>)");
@@ -164,7 +164,7 @@ public class ConnectionControllerTest {
         String data = "somedata";
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("proxy-url", "http://httpbin.org/delete");
+        headers.add("connection-url", "http://httpbin.org/delete");
         HttpEntity<String> request = new HttpEntity<>(data, headers);
         ResponseEntity<String> responseBody = restTemplate.exchange("http://localhost:" + port + "/api/proxy", HttpMethod.DELETE, request, String.class);
         assertTrue(responseBody.getBody().toLowerCase().contains(data));
@@ -179,7 +179,7 @@ public class ConnectionControllerTest {
         String data = "<CARD>4012888888881881</CARD>";
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("proxy-url", "http://httpbin.org/put");
+        headers.add("connection-url", "http://httpbin.org/put");
         headers.add("encryption-regex1", "(?<=<CARD>).*?(?=</CARD>)");
         headers.add("encryption-type1", "card_data");
         HttpEntity<String> request = new HttpEntity<>(data, headers);
@@ -189,7 +189,7 @@ public class ConnectionControllerTest {
         assertTrue(!responseBody.getBody().contains("4012888888881881"));
 
         headers = new HttpHeaders();
-        headers.add("proxy-url", "http://httpbin.org/put");
+        headers.add("connection-url", "http://httpbin.org/put");
         headers.add("decryption-regex1", "(?<=<CARD>).*?(?=</CARD>)");
         headers.add("decryption-type1", "card_data");
         request = new HttpEntity<>(responseBody.getBody(), headers);
@@ -207,7 +207,7 @@ public class ConnectionControllerTest {
         String data = "<CARD>somedata</CARD>";
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("proxy-url", "http://httpbin.org/put");
+        headers.add("connection-url", "http://httpbin.org/put");
         headers.add("encryption-regex1", "(?<=<CARD>).*?(?=</CARD>)");
         headers.add("encryption-type1", "generic");
         HttpEntity<String> request = new HttpEntity<>(data, headers);
@@ -217,7 +217,7 @@ public class ConnectionControllerTest {
         assertTrue(!responseBody.getBody().contains("somedata"));
 
         headers = new HttpHeaders();
-        headers.add("proxy-url", "http://httpbin.org/put");
+        headers.add("connection-url", "http://httpbin.org/put");
         headers.add("decryption-regex1", "(?<=<CARD>).*?(?=</CARD>)");
         headers.add("decryption-type1", "generic");
         request = new HttpEntity<>(responseBody.getBody(), headers);
@@ -229,7 +229,7 @@ public class ConnectionControllerTest {
     @Test
     public void testPassThrough() throws Exception {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("proxy-url", "http://www.google.com");
+        headers.add("connection-url", "http://www.google.com");
         HttpEntity<String> request = new HttpEntity<>(null, headers);
 
 
@@ -245,7 +245,7 @@ public class ConnectionControllerTest {
         String data = "<CARD>078-05-1120</CARD>";
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("proxy-url", "http://httpbin.org/put");
+        headers.add("connection-url", "http://httpbin.org/put");
         headers.add("encryption-regex1", "(?<=<CARD>).*?(?=</CARD>)");
         headers.add("encryption-type1", "ssn");
         HttpEntity<String> request = new HttpEntity<>(data, headers);
@@ -255,7 +255,7 @@ public class ConnectionControllerTest {
         assertTrue(!responseBody.getBody().contains("078-05-1120"));
 
         headers = new HttpHeaders();
-        headers.add("proxy-url", "http://httpbin.org/put");
+        headers.add("connection-url", "http://httpbin.org/put");
         headers.add("decryption-regex1", "(?<=<CARD>).*?(?=</CARD>)");
         headers.add("decryption-type1", "ssn");
         request = new HttpEntity<>(responseBody.getBody(), headers);

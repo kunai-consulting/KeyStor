@@ -164,7 +164,7 @@ java -jar target/keyvault-endpointconnection-0.0.1 rc1-SNAPSHOT.jar server conne
 You should see some output from your endpoint connection as it starts up.  If you want to test it you can open a second terminal window and hit your server with a curl command.  Something like this...
 
 ```
-curl --data "some data and then <CARD>{paste the value returned from the encryptor here}</CARD>" --header "proxy-url: http://httpbin.org/post" --header "decryption-regex0: (?<=<CARD>).*?(?=</CARD>)" --header "decryption-type0: card_data" --header "Content-Type: text/plain" --header "Accept: text/plain" http://localhost:8080/proxy
+curl --data "some data and then <CARD>{paste the value returned from the encryptor here}</CARD>" --header "connection-url: http://httpbin.org/post" --header "decryption-regex0: (?<=<CARD>).*?(?=</CARD>)" --header "decryption-type0: card_data" --header "Content-Type: text/plain" --header "Accept: text/plain" http://localhost:8080/proxy
 ```
 
 Should return an encryption like...
@@ -239,16 +239,16 @@ The Endpoint Connection Service is a little more complicated than the encryption
 
 In order to accomplish this the Endpoint Connection accepts all types of HTTP requests and uses three different kinds of extra information placed in the header of the request:
 
-* The `proxy-url` header
+* The `connection-url` header
 * The `decrypt-regex{n}` and `decrypt-type{n}` headers
 * The `encrypt-regex{n}` and `encrypt-regex{n}` headers
 
 Other than the addition of these headers, and the change in the address the request is initially made to, you can format the contents of your request exactly the same way you would if the code was calling the endpoint directly.
  Let's go over each of the three headers in the above order...
 
-#### The `proxy-url` header
+#### The `connection-url` header
 
-The `proxy-url` header is pretty simple.  In this header you put the URL you want the Endpoint Connection Service to call. So if your code wants to call the whitelisted URL `https://www.foo.com/bar?param=bull` then put that in this header value.
+The `connection-url` header is pretty simple.  In this header you put the URL you want the Endpoint Connection Service to call. So if your code wants to call the whitelisted URL `https://www.foo.com/bar?param=bull` then put that in this header value.
 
 #### The `decrypt-regex{n}` and `decrypt-type{n}` headers
 
@@ -257,10 +257,10 @@ This is where things get a little bit complicated.  The Endpoint Connection Serv
 Let's break down a simple example so we can see how it works.  Let's look at the test call that we made above...
 
 ```
-curl --data "some data and then <CARD>{paste the value returned from the encryptor here}</CARD>" --header "proxy-url: http://httpbin.org/post" --header "decryption-regex0: (?<=<CARD>).*?(?=</CARD>)" --header "decryption-type0: card_data" --header "Content-Type: text/plain" --header "Accept: text/plain" http://localhost:8080/proxy
+curl --data "some data and then <CARD>{paste the value returned from the encryptor here}</CARD>" --header "connection-url: http://httpbin.org/post" --header "decryption-regex0: (?<=<CARD>).*?(?=</CARD>)" --header "decryption-type0: card_data" --header "Content-Type: text/plain" --header "Accept: text/plain" http://localhost:8080/proxy
 ```
 
-In this call we set the `proxy-url` header to `http://httpbin.org/post`  That website will show you the contents of your request in it's response, so it's perfect for testing and playing around with the connection service.  In the body of the request, we have a plain text request with `some data` and then `<CARD></CARD>`. In between the `<CARD>` tags, you pasted the response that you got back from the encryptor so it looks something like...
+In this call we set the `connection-url` header to `http://httpbin.org/post`  That website will show you the contents of your request in it's response, so it's perfect for testing and playing around with the connection service.  In the body of the request, we have a plain text request with `some data` and then `<CARD></CARD>`. In between the `<CARD>` tags, you pasted the response that you got back from the encryptor so it looks something like...
 
 ```
 some data and then <CARD>45E03DECD3D575708722ACBC6EDE0CFDE27C8A6C04196BC0C04E3A545BC9F1E786E562A3FACCF199CE1F5BB77C67A7E0</CARD>

@@ -28,7 +28,7 @@ public class EncryptionController {
      * @return Returns the response from the end-point or 400 (malformed request) if the header value was not set.
      */
     @ApiOperation(value="Encrypt data", response = String.class)
-    @CrossOrigin()
+    @CrossOrigin(allowedHeaders = "*", origins = "*")
     @PostMapping(path = "encrypt")
     @ResponseBody
     public String encryptPost(

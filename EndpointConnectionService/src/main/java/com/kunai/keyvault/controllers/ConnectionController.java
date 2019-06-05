@@ -37,7 +37,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @Controller
 @Api(value = "Encryption services")
 public class ConnectionController {
-    private static final String PROXY_HEADER = "proxy-url";
+    private static final String PROXY_HEADER = "connection-url";
     private static final String ENCRYPTION_REGEX_HEADER = "encryption-regex";
     private static final String ENCRYPTION_TYPE_HEADER = "encryption-type";
     private static final String DECRYPTION_REGEX_HEADER = "decryption-regex";
@@ -60,13 +60,13 @@ public class ConnectionController {
     @ApiOperation(value = "Proxy a request with encryption/decryption", response = String.class)
     @ApiImplicitParams({
             @ApiImplicitParam(value = "The contents of the request to decrypt", required = true, paramType = "body", example = "<ID>some sensitive data</ID> and then some data and then <CARD>some card data</CARD> and some more data and then <CARD>some other card data</CARD> and then finally <ID>some other sensitive data</ID> and the something."),
-            @ApiImplicitParam(name = "proxy-url", value = "The URL to send the request to", required = true, paramType = "header", example = "http://httpbin.org/post"),
+            @ApiImplicitParam(name = "connection-url", value = "The URL to send the request to", required = true, paramType = "header", example = "http://httpbin.org/post"),
             @ApiImplicitParam(name = "encryption-regex0", value = "A regex used to match and encrypt response data.  You can have 0 though n of them", required = false, paramType = "header", example = "encryption-regex1:(?<=<ID>).*?(?=</ID>)"),
             @ApiImplicitParam(name = "encryption-type0", value = "The type of encryption for encryption n, one of ssn, card_data, generic", required = false, paramType = "header", example = "encryption-type1:generic"),
             @ApiImplicitParam(name = "decryption-regex0", value = "A regex used to match and decrypt request data.  You can have 0 though n of them", required = false, paramType = "header", example = "decryption-regex1:(?<=<ID>).*?(?=</ID>)"),
             @ApiImplicitParam(name = "decryption-type0", value = "The type of decryption for decryption n, one of ssn, card_data, generic", required = false, paramType = "header", example = "decryption-type1:generic")
     })
-    @CrossOrigin()
+    @CrossOrigin(allowedHeaders = "*", origins = "*")
     @RequestMapping(value = "/proxy", method = {GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS, TRACE})
     public void proxyPost(HttpServletResponse httpResponse, HttpServletRequest httpRequest) throws IOException {
         proxy(HttpMethod.resolve(httpRequest.getMethod()), httpResponse, httpRequest, httpRequest.getInputStream());
@@ -123,20 +123,8 @@ public class ConnectionController {
                     return;
                 }
 
-                CryptoOp encryption = encryptions.get(index);
-                if (encryption != null) {
-                    try {
-                        encryption.setType(httpRequest.getHeader(headerName));
-                    } catch (NumberFormatException e) {
-                        LOGGER.error("[{}] {} header value should be an integer but was {}", sessionId, headerName, httpRequest.getHeader(headerName));
-                        httpResponse.setStatus(400);
-                        return;
-                    }
-                } else {
-                    LOGGER.error("[{}] Header {} not found but '{}{}' was found", sessionId, ENCRYPTION_REGEX_HEADER, index, headerName);
-                    httpResponse.setStatus(400);
+                if (cypt(httpResponse, httpRequest, encryptions, sessionId, headerName, index, ENCRYPTION_REGEX_HEADER))
                     return;
-                }
 
             }
 
@@ -150,20 +138,8 @@ public class ConnectionController {
                     return;
                 }
 
-                CryptoOp decryption = decryptions.get(index);
-                if (decryption != null) {
-                    try {
-                        decryption.setType(httpRequest.getHeader(headerName));
-                    } catch (NumberFormatException e) {
-                        LOGGER.error("[{}] {} header value should be an integer but was {}", sessionId, headerName, httpRequest.getHeader(headerName));
-                        httpResponse.setStatus(400);
-                        return;
-                    }
-                } else {
-                    LOGGER.error("[{}] Header {} not found but '{}{}' was found", sessionId, DECRYPTION_REGEX_HEADER, index, headerName);
-                    httpResponse.setStatus(400);
+                if (cypt(httpResponse, httpRequest, decryptions, sessionId, headerName, index, DECRYPTION_REGEX_HEADER))
                     return;
-                }
 
             }
 
@@ -171,27 +147,13 @@ public class ConnectionController {
 
         // make sure all the types where set
         Iterator it = encryptions.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<Integer, CryptoOp> pair = (Map.Entry) it.next();
-            if (pair.getValue().getType().equals("unset")) {
-                LOGGER.error("[{}] regex {} found but there was no matching {} header", sessionId, pair.getValue().getRegex(), ENCRYPTION_TYPE_HEADER);
-                httpResponse.setStatus(400);
-                return;
-            }
-        }
+        if (checkTypes(httpResponse, sessionId, it)) return;
 
         // make sure all the types where set
         it = decryptions.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<Integer, CryptoOp> pair = (Map.Entry) it.next();
-            if (pair.getValue().getType().equals("unset")) {
-                LOGGER.error("[{}] regex {} found but there was no matching {} header", sessionId, pair.getValue().getRegex(), ENCRYPTION_TYPE_HEADER);
-                httpResponse.setStatus(400);
-                return;
-            }
-        }
+        if (checkTypes(httpResponse, sessionId, it)) return;
 
-        //copy everything but the proxy-url header, the encryption/decryption parameters, and the content length headers
+        //copy everything but the connection-url header, the encryption/decryption parameters, and the content length headers
         //since the length will change, and the host since that will be modified.
         for (String headerName : headerValuesList) {
             if (!headerName.contentEquals(PROXY_HEADER) &&
@@ -306,5 +268,35 @@ public class ConnectionController {
             LOGGER.error("[{}] Exception while writing proxy response to the response: {}", sessionId, e.getLocalizedMessage());
             httpResponse.setStatus(500);
         }
+    }
+
+    private boolean cypt(HttpServletResponse httpResponse, HttpServletRequest httpRequest, HashMap<Integer, CryptoOp> encryptions, String sessionId, String headerName, int index, String encryptionRegexHeader) {
+        CryptoOp encryption = encryptions.get(index);
+        if (encryption != null) {
+            try {
+                encryption.setType(httpRequest.getHeader(headerName));
+            } catch (NumberFormatException e) {
+                LOGGER.error("[{}] {} header value should be an integer but was {}", sessionId, headerName, httpRequest.getHeader(headerName));
+                httpResponse.setStatus(400);
+                return true;
+            }
+        } else {
+            LOGGER.error("[{}] Header {} not found but '{}{}' was found", sessionId, encryptionRegexHeader, index, headerName);
+            httpResponse.setStatus(400);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean checkTypes(HttpServletResponse httpResponse, String sessionId, Iterator it) {
+        while (it.hasNext()) {
+            Map.Entry<Integer, CryptoOp> pair = (Map.Entry) it.next();
+            if (pair.getValue().getType().equals("unset")) {
+                LOGGER.error("[{}] regex {} found but there was no matching {} header", sessionId, pair.getValue().getRegex(), ENCRYPTION_TYPE_HEADER);
+                httpResponse.setStatus(400);
+                return true;
+            }
+        }
+        return false;
     }
 }

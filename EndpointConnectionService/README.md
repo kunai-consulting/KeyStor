@@ -37,7 +37,7 @@ To run the server without Docker run (replace the version with the correct one).
 
    **Required:**
    
-   `proxy-url: [the full URL of the endpoint you want to connect to`
+   `connection-url: [the full URL of the endpoint you want to connect to`
    
    **Optional:**
    
@@ -63,7 +63,7 @@ To run the server without Docker run (replace the version with the correct one).
 * **Sample Call:**
 
 ```
-curl --data "some data and then <CARD>{paste the value returned from the encryptor here}</CARD>" --header "proxy-url: http://httpbin.org/post" --header "decryption-regex0: (?<=<CARD>).*?(?=</CARD>)" --header "decryption-type0: card_data" --header "Content-Type: text/plain" --header "Accept: text/plain" http://localhost:80/api/proxy
+curl --data "some data and then <CARD>{paste the value returned from the encryptor here}</CARD>" --header "connection-url: http://httpbin.org/post" --header "decryption-regex0: (?<=<CARD>).*?(?=</CARD>)" --header "decryption-type0: card_data" --header "Content-Type: text/plain" --header "Accept: text/plain" http://localhost:80/api/proxy
 ```
 * **Notes:**
 
