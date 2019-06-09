@@ -43,7 +43,7 @@ class KeystorDemo extends React.Component {
 
     handelSubmit(values, setSubmitting) {
         setTimeout(() => {
-            fetch('http://localhost:8080/api/proxy', {
+            fetch('https://keystor.org/api/proxy', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -62,14 +62,14 @@ class KeystorDemo extends React.Component {
                 setSubmitting(false);
             })
                 .catch(error => {
-                    console.log(error)
+                    console.log(error);
                     setSubmitting(false);
                 })
         }, 0);
     }
 
     handelEncrypt(value) {
-        fetch('http://localhost:8082/api/encrypt?type=generic', {
+        fetch('https://keystor.org/api/encrypt?type=generic', {
             method: 'POST',
             headers: {
                 'Accept': '*/*'
@@ -93,28 +93,25 @@ class KeystorDemo extends React.Component {
         });
     }
 
-
     render() {
         let responseStr = JSON.stringify(this.state['response'], null, 2);
         let matchStr = '';
         let responseText = '';
         if (responseStr.length > 2) {
-            responseText = "Response From Trulioo:"
+            responseText = "Response From Trulioo:";
             if (responseStr.includes("nomatch")) {
                 matchStr = "No Match";
-            }
-            else {
+            } else {
                 matchStr = "Match";
             }
-        }
-        else {
+        } else {
             responseStr = '';
         }
         return (
             <div className="app">
                 <h1>
                     {' '}
-                    <a href="https://github.com/kunai-consulting/KeyStor" target="_blank" rel="noopener">
+                    <a href="https://github.com/kunai-consulting/KeyStor" rel="noopener">
                         Keystor
                     </a>{' '}
                     Demo
@@ -161,7 +158,7 @@ class KeystorDemo extends React.Component {
                                     className="outline"
                                     onClick={(values) => {
                                         this.handelChangeLastName("Smith", false);
-                                        this.setState( {
+                                        this.setState({
                                             submission: this.state.submission,
                                             response: '',
                                             isEncrypted: false,
@@ -188,13 +185,14 @@ class KeystorDemo extends React.Component {
                                             padding: '.5rem',
                                         }}
                                     >
-      <strong>
-          {this.state.isEncrypted ? 'What gets sent to the main data center: ' : 'Collected on the client from the user: '}
-      </strong>{' '}
+                                        <strong>
+                                            {this.state.isEncrypted ? 'What gets sent to the main data center: ' : 'Collected on the client from the user: '}
+                                        </strong>{' '}
                                         {JSON.stringify(this.state['submission'], null, 2)}
-    </pre>
+                                    </pre>
                                 </div>
-                                <button type="submit" disabled={isSubmitting || isEncrypting || !this.state.isEncrypted}>
+                                <button type="submit"
+                                        disabled={isSubmitting || isEncrypting || !this.state.isEncrypted}>
                                     Send to Trulioo
                                 </button>
                                 <div style={{margin: '1rem 0'}}>
@@ -206,9 +204,9 @@ class KeystorDemo extends React.Component {
                                             padding: '.5rem',
                                         }}
                                     >
-      {responseText}{' '}<strong>{matchStr}{' '}</strong>
+                                        {responseText}{' '}<strong>{matchStr}{' '}</strong>
                                         {responseStr}
-    </pre>
+                                    </pre>
                                 </div>
                             </form>
                         );
