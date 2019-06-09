@@ -3,7 +3,7 @@ WORKDIR /app
 COPY . .
 RUN yarn run build
 
-FROM node-slim
+FROM node:slim
 RUN yarn global add serve
 WORKDIR /app
 COPY --from=builder /app/build .
