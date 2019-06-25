@@ -1,0 +1,43 @@
+@import '~bootstrap/scss/bootstrap-grid.scss';
+@import '../Styles/colors.scss';
+
+.section {
+  &--red {
+    background-color: $kunaiRedColor;
+  }
+
+  &--blue {
+    background-color: $kunaiBlueColor;
+  }
+
+  &--peach {
+    background-color: $kunaiPeachColor;
+  }
+
+  &--white {
+    background-color: $whiteColor;
+  }
+}
+
+.section-left-col {
+  &--red {
+    border-right: 7px solid $kunaiRedColor;
+  }
+
+  &--blue {
+    border-right: 7px solid $kunaiBlueColor;
+  }
+
+  &--peach {
+    border-right: 7px solid $kunaiPeachColor;
+  }
+
+  &--white {
+    border-right: 7px solid $whiteColor;
+  }
+}
+
+.section-content {
+  padding-top: 110px;
+  padding-bottom: 60px;
+}

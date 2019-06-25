@@ -1,0 +1,25 @@
+@import '../Styles/colors.scss';
+
+.header {
+  background-color: $kunaiBlueColor;
+  height: 200px;
+  
+  &__logo {
+    width: 194px;
+    margin: 30px;
+    position: absolute;
+  }
+
+  &__cubes {
+    width: 300px;
+    right: 140px;
+    top: -40px;
+    position: absolute;
+  }
+
+  &__menu {
+    position: absolute;
+    right: -22px;
+    top: 160px; 
+  }
+}

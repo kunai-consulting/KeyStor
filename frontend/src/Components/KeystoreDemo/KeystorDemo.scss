@@ -1,0 +1,105 @@
+@import '../Shared/Styles/colors.scss';
+@import '../Shared/Styles/typography.scss';
+
+.keystor {
+    h2 {
+        @include kunai-h2($whiteColor, $kunaiBlueColor);
+    }
+
+    form {
+        padding-top: 50px;
+    }
+
+    label {
+        @include kunai-regular-text;
+        font-size: 18px;
+        color: $whiteColor;
+        display: block;
+        margin-bottom: .5rem;
+    }
+
+    input {
+        @include kunai-regular-text;
+        padding: .5rem;
+        font-size: 17px;
+        width: 100%;
+        display: block;
+        border: 1px solid #ccc;
+    }
+
+    button {
+        min-width: 290px;
+        padding: 0px 40px;
+        height: 49px;
+        margin-right: 10px;
+        margin-top: 26px;
+        @include kunai-regular-text;
+        letter-spacing: 4.27px;
+        text-transform: uppercase;
+    }
+
+    button:hover {
+        opacity: .8;
+        cursor: pointer;
+    }
+
+    .button-primary {
+        border: 2px solid $whiteColor;
+        background-color: $whiteColor;
+        color: black;
+    }
+
+    .button-secondary {
+        border: 2px solid $whiteColor;
+        background-color: transparent;
+        color: $whiteColor
+    }
+
+    button:disabled {
+        opacity: .5;
+        cursor: not-allowed !important;
+    }
+
+    .input-feedback {
+        color: red;
+        margin-top: .25rem;
+    }
+    
+    input.error {
+        border-color: red;
+    }
+
+    .code-description {
+        @include kunai-regular-text;
+        font-size: 16px;
+        padding-top: 35px;
+        color: $whiteColor;
+    }
+
+    .code-block {
+        border: solid 1px $codeBorderColor;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        
+        pre {
+            margin-top: 0;
+            margin-bottom: 0;
+            min-height: 100px;
+            max-height: 850px;
+            overflow-x: hidden;
+        }
+    }
+}
+
+pre::-webkit-scrollbar {
+    width: 1em;
+    background: rgb(43, 43, 43);
+}
+ 
+pre::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+ 
+pre::-webkit-scrollbar-thumb {
+    background-color: #484848;
+}

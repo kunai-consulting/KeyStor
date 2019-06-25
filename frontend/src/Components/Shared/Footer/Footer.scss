@@ -1,0 +1,13 @@
+@import '../Styles/colors.scss';
+@import '../Styles/typography.scss';
+
+.footer {
+  background-color: $whiteColor;
+  height: 60px;
+
+  &__text {
+    @include kunai-regular-text;
+    margin-top: 20px;
+    margin-left: 20px;
+  }
+}
