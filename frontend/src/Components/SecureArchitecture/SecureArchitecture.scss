@@ -1,0 +1,43 @@
+@import '../Shared/Styles/colors.scss';
+@import '../Shared/Styles/typography.scss';
+
+.secure-arch {
+  margin-top: 100px;
+  margin-bottom: 100px;
+
+  &__title {
+    @include kunai-h2($whiteColor, $kunaiBlueColor);
+  }
+
+  &__text {
+    @include kunai-secondary-text($whiteColor)
+   
+    margin-top: 50px;
+    padding-right: 64px;
+    font-size: 28px;
+    line-height: 1.29;
+    letter-spacing: -0.46px;
+  }
+
+  &__bullets {
+    margin-top: 50px;
+  }
+
+  &__bullet {
+    margin-bottom: 15px;
+
+    &__img {
+      top: 7px;
+      position: absolute;
+    }
+
+    &__text {
+      @include kunai-secondary-text($whiteColor)
+      line-height: 1.29;
+      margin-top: 5px;
+      letter-spacing: -0.34px;
+      font-size: 28px;
+      padding: 0px 30px;
+    }
+  }
+}

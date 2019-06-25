@@ -1,3 +1,6 @@
+@import '../Shared/Styles/colors.scss';
+@import '~bootstrap/scss/bootstrap-grid.scss';
+
 * {
   box-sizing: border-box;
 }
@@ -12,6 +15,13 @@ body {
 
 a {
   text-decoration: none;
+  color: $kunaiBlueColor;
+  font-weight: bold;
+  border-bottom: 3px solid $kunaiRedColor;
+}
+
+a:hover {
+  opacity: .7;
 }
 
 img {
@@ -20,4 +30,87 @@ img {
 
 h1, h2 {
   display: inline-block;
+}
+
+.no-padding {
+  padding: 0;
+}
+
+.content-chunk {
+  z-index: 1;
+  padding: 0px;
+  @include media-breakpoint-down(md) {
+    padding: 0px 30px;
+  }
+}
+
+.cubes {
+  position: absolute;
+  z-index: 0;
+  display: block;
+  @include media-breakpoint-down(lg) {
+    display: none;
+  }
+}
+
+.cubes-1 {
+  width: 300px;
+  right: 140px;
+  top: -40px;
+}
+
+.cubes-2 {
+  width: 340px;
+  right: -150px;
+  top: 1350px;
+}
+
+.cubes-3 {
+  width: 280px;
+  right: -100px;
+  top: 2050px;
+}
+
+.cubes-4 {
+  width: 150px;
+  left: -100px;
+  top: 3650px;
+}
+
+.cubes-5 {
+  width: 150px;
+  right: -100px;
+  top: 4150px;
+}
+
+.cubes-6 {
+  width: 300px;
+  right: -130px;
+  top: 5150px;
+  z-index: 2;
+}
+
+.cubes-7 {
+  width: 135px;
+  right: -50px;
+  top: 6250px;
+}
+
+.cubes-8 {
+  width: 135px;
+  left: 30px;
+  top: 6850px;
+  z-index: 2;
+}
+
+.cubes-9 {
+  width: 135px;
+  left: -80px;
+  top: 7550px;
+}
+
+.cubes-10 {
+  width: 316px;
+  right: -90px;
+  top: 7950px;
 }

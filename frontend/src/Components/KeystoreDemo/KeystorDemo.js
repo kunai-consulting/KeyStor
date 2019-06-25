@@ -110,102 +110,106 @@ class KeystorDemo extends React.Component {
       responseStr = '';
     }
     return (
-      <div className="keystor">
-        <a href="https://github.com/kunai-consulting/KeyStor" rel="noopener">
-          <h2>KEYSTOR DEMO</h2>
-        </a>
+      <div className="row content-chunk">
+        <div className="col-12">
+          <div className="keystor">
+            <h2>KEYSTOR DEMO</h2>
 
-        <Formik
-          initialValues={{ lastName: 'Smith' }}
-          onSubmit={(values, { setSubmitting }) => this.handelSubmit(values, setSubmitting)}
-          validationSchema={Yup.object().shape({
-            lastName: Yup.string()
-              .required('Required'),
-          })}
-        >
-          {props => {
-            const {
-              touched,
-              errors,
-              isSubmitting,
-              isEncrypting,
-              handleBlur,
-              handleSubmit,
-            } = props;
-            return (
-              <form onSubmit={handleSubmit}>
-                <label htmlFor="email">
-                  Last Name
-                </label>
-                <input
-                  id="lastName"
-                  type="text"
-                  value={this.state.submission['DataFields']['PersonInfo']['FirstSurName']}
-                  onInput={(values) => this.handelChangeLastName(values.target.value, false)}
-                  onBlur={handleBlur}
-                  className={
-                    errors.lastName && touched.lastName ? 'text-input error' : 'text-input'
-                  }
-                />
-                {errors.lastName && touched.lastName && (
-                  <div className="input-feedback">{errors.lastName}</div>
-                )}
+            <Formik
+              initialValues={{ lastName: 'Smith' }}
+              onSubmit={(values, { setSubmitting }) => this.handelSubmit(values, setSubmitting)}
+              validationSchema={Yup.object().shape({
+                lastName: Yup.string()
+                  .required('Required'),
+              })}
+            >
+              {props => {
+                const {
+                  touched,
+                  errors,
+                  isSubmitting,
+                  isEncrypting,
+                  handleBlur,
+                  handleSubmit,
+                } = props;
+                return (
+                  <form onSubmit={handleSubmit}>
+                    <label htmlFor="email">
+                      Last Name
+                    </label>
+                    <input
+                      id="lastName"
+                      type="text"
+                      value={this.state.submission['DataFields']['PersonInfo']['FirstSurName']}
+                      onInput={(values) => this.handelChangeLastName(values.target.value, false)}
+                      onBlur={handleBlur}
+                      className={
+                        errors.lastName && touched.lastName ? 'text-input error' : 'text-input'
+                      }
+                    />
+                    {errors.lastName && touched.lastName && (
+                      <div className="input-feedback">{errors.lastName}</div>
+                    )}
 
-                <button
-                  type="button"
-                  className="button-primary"
-                  disabled={isEncrypting || isSubmitting || this.state.isEncrypted}
-                  onClick={(values) => this.handelEncrypt(values)}
-                >
-                  Encrypt
-                </button>
+                    <button
+                      type="button"
+                      className="button-primary"
+                      disabled={isEncrypting || isSubmitting || this.state.isEncrypted}
+                      onClick={(values) => this.handelEncrypt(values)}
+                    >
+                      Encrypt
+                    </button>
 
-                <button
-                  type="button"
-                  className="button-secondary"
-                  onClick={(values) => {
-                    this.handelChangeLastName("Smith", false);
-                    this.setState({
-                      submission: this.state.submission,
-                      response: '',
-                      isEncrypted: false,
-                    })
-                  }}
-                  disabled={isSubmitting || isEncrypting || !this.state.isEncrypted}
-                >
-                  Reset
-                </button>
+                    <button
+                      type="button"
+                      className="button-secondary"
+                      onClick={(values) => {
+                        this.handelChangeLastName("Smith", false);
+                        this.setState({
+                          submission: this.state.submission,
+                          response: '',
+                          isEncrypted: false,
+                        })
+                      }}
+                      disabled={isSubmitting || isEncrypting || !this.state.isEncrypted}
+                    >
+                      Reset
+                    </button>
 
-                <div className="code-description">
-                  {this.state.isEncrypted ? 'What gets sent to the main data center: ' : 'Collected on the client from the user: '}
-                </div>{' '}
-                <div className="code-block">
-                  <SyntaxHighlighter language='json' style={a11yDark}>
-                    {JSON.stringify(this.state['submission'], null, 2)}
-                  </SyntaxHighlighter>
-                </div>
+                    <div className="code-description">
+                      {this.state.isEncrypted ? 'What gets sent to the main data center: ' : 'Collected on the client from the user: '}
+                    </div>{' '}
+                    <div className="code-block">
+                      <SyntaxHighlighter language='json' style={a11yDark}>
+                        {JSON.stringify(this.state['submission'], null, 2)}
+                      </SyntaxHighlighter>
+                    </div>
 
-                <button
-                  className="button-secondary"
-                  type="submit"
-                  disabled={isSubmitting || isEncrypting || !this.state.isEncrypted}>
-                  Send to KYC Vendor
-                </button>
-                
-                <div className="code-description">
-                  {responseText}{' '}<strong>{matchStr}{' '}</strong>
-                </div>
-                <div className="code-block">
-                  <SyntaxHighlighter language='json' style={a11yDark}>
-                    {responseStr}
-                  </SyntaxHighlighter>
-                </div>
-              </form>
-            );
-          }}
-        </Formik>
+                    <button
+                      className="button-secondary"
+                      type="submit"
+                      disabled={isSubmitting || isEncrypting || !this.state.isEncrypted}>
+                      Send to KYC Vendor
+                    </button>
+                    
+                    <div className="code-description">
+                      {responseText}{' '}<strong>{matchStr}{' '}</strong>
+                    </div>
+                    <div className="code-block">
+                      <SyntaxHighlighter language='json' style={a11yDark}>
+                        {responseStr}
+                      </SyntaxHighlighter>
+                    </div>
+                  </form>
+                );
+              }}
+            </Formik>
 
-      </div>);
+          </div>
+
+        </div>
+      </div>
+    );
   }
 }
 

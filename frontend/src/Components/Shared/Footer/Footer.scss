@@ -6,7 +6,7 @@
   height: 60px;
 
   &__text {
-    @include kunai-regular-text;
+    @include kunai-regular-text($kunaiBlueColor);
     margin-top: 20px;
     margin-left: 20px;
   }

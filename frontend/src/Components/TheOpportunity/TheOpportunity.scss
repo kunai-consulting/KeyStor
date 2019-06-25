@@ -1,0 +1,44 @@
+@import '../Shared/Styles/colors.scss';
+@import '../Shared/Styles/typography.scss';
+@import '~bootstrap/scss/bootstrap-grid.scss';
+
+.the-opportunity {
+  margin-bottom: 70px;
+
+  &__title {
+    @include kunai-h1($whiteColor);
+    font-size: 110px;
+    font-weight: 300;
+    margin-top: -30px;
+  }
+  
+  &__subtitle {
+    @include kunai-h2($whiteColor, $kunaiBlueColor);
+    margin-top: 100px;
+  }
+  
+  &__content-title {
+    @include kunai-h1($whiteColor);
+    font-size: 80px;
+    line-height: 1.12;
+    margin-top: 80px;
+    margin-left: 0px;
+  }
+
+  hr {
+    color: $whiteColor;
+    display: block;
+    margin-top: 50px;
+    margin-bottom: 30px;
+  }
+
+  p {
+    @include kunai-regular-text($whiteColor);
+    font-size: 24px;
+    line-height: 1.71;
+
+    strong {
+      font-weight: 400;
+    }
+  }
+}

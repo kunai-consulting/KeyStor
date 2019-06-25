@@ -5,19 +5,18 @@ import menu from '../../../Assets/imgs/menu.svg';
 import './Header.scss';
 
 class Header extends React.Component {
-    render() {
-        return (
-            <header className="header">
-              <img className="header__logo" src={kunaiLogo} />
-              <img className="header__cubes" src={cubes4} />
-              <div className="row">
-                <div className="col-md-1 col-xs-0">
-                  <img className="header__menu" src={menu} />
-                </div>
-              </div>
-            </header>
-        )
-    }
+  render() {
+    return (
+      <header className="header">
+        <img className="header__logo" src={kunaiLogo} />
+        <div className="row">
+          <div className="col-md-1 col-xs-0">
+            <img className="header__menu" src={menu} />
+          </div>
+        </div>
+      </header>
+    )
+  }
 }
 
 export default Header;

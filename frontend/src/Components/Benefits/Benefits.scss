@@ -1,0 +1,37 @@
+@import '../Shared/Styles/colors.scss';
+@import '../Shared/Styles/typography.scss';
+
+.benefits {
+  &__title {
+    @include kunai-h1($kunaiBlueColor);
+    font-size: 60px;
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: -1.14px;
+  }
+
+  &__subtitle {
+      @include kunai-h2($kunaiBlueColor, $whiteColor);
+  }
+
+  &__info-tile {
+    margin-bottom: 30px;
+    margin-left: 20px;
+
+    &__title {
+      @include kunai-h3($kunaiBlueColor);
+      font-size: 22px;
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+    &__text {
+      @include kunai-secondary-text($kunaiBlueColor);
+      font-size: 24px;
+      font-weight: 500;
+    }
+  }
+
+  .content-chunk {
+    margin-top: 60px;
+  }
+}

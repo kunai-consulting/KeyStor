@@ -1,4 +1,5 @@
 @import '../Styles/colors.scss';
+@import '~bootstrap/scss/bootstrap-grid.scss';
 
 .header {
   background-color: $kunaiBlueColor;
@@ -8,18 +9,23 @@
     width: 194px;
     margin: 30px;
     position: absolute;
+    z-index: 1;
   }
-
+  
   &__cubes {
     width: 300px;
     right: 140px;
     top: -40px;
     position: absolute;
+    z-index: 0;
   }
 
   &__menu {
     position: absolute;
     right: -22px;
     top: 160px; 
+    @include media-breakpoint-down(sm) {
+      display: none;
+    }
   }
 }

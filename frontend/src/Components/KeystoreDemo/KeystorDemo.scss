@@ -2,6 +2,9 @@
 @import '../Shared/Styles/typography.scss';
 
 .keystor {
+    margin-top: 110px;
+    margin-bottom: 100px;
+
     h2 {
         @include kunai-h2($whiteColor, $kunaiBlueColor);
     }
@@ -11,16 +14,16 @@
     }
 
     label {
-        @include kunai-regular-text;
+        @include kunai-regular-text($whiteColor);
         font-size: 18px;
-        color: $whiteColor;
         display: block;
         margin-bottom: .5rem;
     }
 
     input {
-        @include kunai-regular-text;
+        @include kunai-regular-text($kunaiBlueColor);
         padding: .5rem;
+        margin-bottom: 15px;
         font-size: 17px;
         width: 100%;
         display: block;
@@ -33,7 +36,7 @@
         height: 49px;
         margin-right: 10px;
         margin-top: 26px;
-        @include kunai-regular-text;
+        @include kunai-regular-text($whiteColor);
         letter-spacing: 4.27px;
         text-transform: uppercase;
     }
@@ -70,10 +73,9 @@
     }
 
     .code-description {
-        @include kunai-regular-text;
+        @include kunai-regular-text($whiteColor);
         font-size: 16px;
         padding-top: 35px;
-        color: $whiteColor;
     }
 
     .code-block {
