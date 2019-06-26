@@ -1,6 +1,7 @@
 FROM node AS builder
 WORKDIR /app
 COPY . .
+RUN yarn install
 RUN yarn run build
 
 FROM node:slim
