@@ -1,0 +1,79 @@
+@import '../Shared/Styles/colors.scss';
+@import '../Shared/Styles/typography.scss';
+@import '~bootstrap/scss/bootstrap-grid.scss';
+
+.capabilities {
+  margin-top: 100px;
+  margin-bottom: 40px;
+
+  &__subtitle {
+      @include kunai-h2($kunaiBlueColor, $kunaiPeachColor);
+      margin-bottom: 40px;
+  }
+
+  &__main-bullet {
+    margin-top: 5px;
+
+    &__text {
+      @include kunai-secondary-text($kunaiBlueColor)
+      font-size: 28px;
+      line-height: 1.54;
+      letter-spacing: -0.34px;
+      font-weight: 600;
+      margin-top: 5px;
+      margin-left: 35px;
+    }
+  }
+
+  &__paper {
+    background-color: $whiteColor;
+    padding: 120px 180px;
+    padding-bottom: 120px;
+    margin-left: -160px;
+    margin-top: 50px;
+    width: 130%;
+    
+    @include media-breakpoint-down(lg) {
+      width: 140%;
+    }
+    
+    @include media-breakpoint-down(sm) {
+      width: 100%;
+      margin-left: 0;
+      padding: 60px 50px;
+    }
+
+    &__subtitle {
+      @include kunai-h2($kunaiBlueColor, $whiteColor);
+    }
+    
+    &__bullets {
+      margin-top: 30px;
+    }
+
+    &__bullet {
+      margin-top: 10px;
+      &__img {
+        top: 7px;
+        position: absolute;
+      }
+
+      &__text {
+        @include kunai-regular-text($kunaiBlueColor)
+        line-height: 1.75;
+        letter-spacing: -0.34px;
+        font-size: 24px;
+        padding: 0px 30px;
+      }
+
+    }
+
+    p {
+      @include kunai-regular-text($kunaiBlueColor);
+      font-size: 24px;
+      line-height: 1.75;
+      letter-spacing: -0.34px;
+      margin-top: 30px;
+    }
+  }
+}
