@@ -4,7 +4,7 @@ import './StyledBullet.scss';
 
 const StyledBullet = ({ children, className }) => (
   <div className={`styled-bullet ${className}`}>
-    <img className={`${className}__img`} src={bulletImg} />
+    <img alt="bullet-img" className={`${className}__img`} src={bulletImg} />
     <div className={`${className}__text`}>{children}</div>
   </div>
 );

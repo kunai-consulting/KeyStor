@@ -22,7 +22,7 @@ const HowItWorks = () => (
       <div className={colClass}>
         <Carousel
           autoPlay={true}
-          transitionTime={1000}
+          transitionTime={6000}
           showArrows={false}
           showStatus={false}
           showThumbs={false}
@@ -33,7 +33,7 @@ const HowItWorks = () => (
               <p>Sensitive data gets collected. It gets encrypted on the device before it goes to the servers.</p>
             </div>
             <div className="col-lg-8 col-md-12 ">
-              <img className="slide__content__img" src={keystorSlide1} />
+              <img alt="slide-1" className="slide__content__img" src={keystorSlide1} />
             </div>
           </div>
           <div className={slideRowClass}>
@@ -42,7 +42,7 @@ const HowItWorks = () => (
               <p>Now, the only secret data you have in your servers with your app is encrypted. The business logic can only read the non-secret part of the data. The encryption keys are not accessible by the main data center.</p>
             </div>
             <div className="col-lg-7 col-md-12">
-              <img className="slide__content__img" src={keystorSlide2} />
+              <img alt="slide-2" className="slide__content__img" src={keystorSlide2} />
             </div>
           </div>
           <div className={slideRowClass}>
@@ -51,7 +51,7 @@ const HowItWorks = () => (
               <p>When the business logic needs to send this data (e.g. to do KYC validation), it talks to KeyStor which decrypts the data and then talks to the external endpoint.</p>
             </div>
             <div className="col-lg-8 col-md-12">
-              <img className="slide__content__img" src={keystorSlide3} />
+              <img alt="slide-3" className="slide__content__img" src={keystorSlide3} />
             </div>
           </div>
           <div className={slideRowClass}>
@@ -60,7 +60,7 @@ const HowItWorks = () => (
               <p>The end point’s response is sent back to the main data center by KeyStor, after any sensitive data has been encrypted.</p>
             </div>
             <div className="col-lg-8 col-md-12">
-              <img className="slide__content__img" src={keystorSlide4} />
+              <img alt="slide-4" className="slide__content__img" src={keystorSlide4} />
             </div>
           </div>
         </Carousel>

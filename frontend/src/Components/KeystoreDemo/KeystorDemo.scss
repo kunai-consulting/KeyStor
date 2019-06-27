@@ -16,7 +16,7 @@
 
     label {
         @include kunai-regular-text($whiteColor);
-        font-size: 18px;
+        font-size: 14.4px;
         display: block;
         margin-bottom: .5rem;
     }
@@ -24,7 +24,7 @@
     input {
         @include kunai-regular-text($kunaiBlueColor);
         padding: .5rem;
-        font-size: 17px;
+        font-size: 13.6px;
         width: 100%;
         display: block;
         border: 1px solid #ccc;
@@ -82,7 +82,7 @@
 
     .code-description {
         @include kunai-regular-text($whiteColor);
-        font-size: 16px;
+        font-size: 12.8px;
         padding-top: 35px;
     }
 

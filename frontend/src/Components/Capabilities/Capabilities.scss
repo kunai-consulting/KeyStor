@@ -16,7 +16,7 @@
 
     &__text {
       @include kunai-secondary-text($kunaiBlueColor)
-      font-size: 28px;
+      font-size: 22.4px;
       line-height: 1.54;
       letter-spacing: -0.34px;
       font-weight: 600;
@@ -62,7 +62,7 @@
         @include kunai-regular-text($kunaiBlueColor)
         line-height: 1.75;
         letter-spacing: -0.34px;
-        font-size: 24px;
+        font-size: 19.2px;
         padding: 0px 30px;
       }
 
@@ -70,7 +70,7 @@
 
     p {
       @include kunai-regular-text($kunaiBlueColor);
-      font-size: 24px;
+      font-size: 19.2px;
       line-height: 1.75;
       letter-spacing: -0.34px;
       margin-top: 30px;

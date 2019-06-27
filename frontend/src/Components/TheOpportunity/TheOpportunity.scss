@@ -7,7 +7,7 @@
 
   &__title {
     @include kunai-h1($whiteColor);
-    font-size: 110px;
+    font-size: 88px;
     font-weight: 300;
     margin-top: -30px;
   }
@@ -19,7 +19,7 @@
   
   &__content-title {
     @include kunai-h1($whiteColor);
-    font-size: 80px;
+    font-size: 64px;
     line-height: 1.12;
     margin-top: 80px;
     margin-left: 0px;
@@ -34,7 +34,7 @@
 
   p {
     @include kunai-regular-text($whiteColor);
-    font-size: 24px;
+    font-size: 19.2px;
     line-height: 1.71;
     margin-bottom: 40px;
 
