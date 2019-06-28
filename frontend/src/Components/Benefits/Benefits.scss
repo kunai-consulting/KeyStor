@@ -4,7 +4,7 @@
 .benefits {
   &__title {
     @include kunai-h1($kunaiBlueColor);
-    font-size: 60px;
+    font-size: 48px;
     font-weight: 300;
     line-height: 1;
     letter-spacing: -1.14px;
@@ -20,13 +20,13 @@
 
     &__title {
       @include kunai-h3($kunaiBlueColor);
-      font-size: 22px;
+      font-size: 17.6px;
       font-weight: 500;
       margin-bottom: 10px;
     }
     &__text {
       @include kunai-secondary-text($kunaiBlueColor);
-      font-size: 24px;
+      font-size: 19.2px;
       font-weight: 500;
     }
   }

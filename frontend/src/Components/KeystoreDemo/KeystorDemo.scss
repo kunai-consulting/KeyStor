@@ -16,7 +16,7 @@
 
     label {
         @include kunai-regular-text($whiteColor);
-        font-size: 18px;
+        font-size: 14.4px;
         display: block;
         margin-bottom: .5rem;
     }
@@ -24,7 +24,7 @@
     input {
         @include kunai-regular-text($kunaiBlueColor);
         padding: .5rem;
-        font-size: 17px;
+        font-size: 13.6px;
         width: 100%;
         display: block;
         border: 1px solid #ccc;
@@ -33,42 +33,6 @@
         @include media-breakpoint-down(md) {
             margin-bottom: 10px;
         }
-    }
-
-    button {
-        min-width: 290px;
-        padding: 0px 40px;
-        height: 49px;
-        @include kunai-regular-text($whiteColor);
-        letter-spacing: 4.27px;
-        text-transform: uppercase;
-        margin-right: 10px;
-
-        @include media-breakpoint-down(md) {
-            margin-bottom: 10px;
-        }
-    }
-
-    button:hover {
-        opacity: .8;
-        cursor: pointer;
-    }
-
-    .button-primary {
-        border: 2px solid $whiteColor;
-        background-color: $whiteColor;
-        color: black;
-    }
-
-    .button-secondary {
-        border: 2px solid $whiteColor;
-        background-color: transparent;
-        color: $whiteColor
-    }
-
-    button:disabled {
-        opacity: .5;
-        cursor: not-allowed !important;
     }
 
     .input-feedback {
@@ -82,7 +46,7 @@
 
     .code-description {
         @include kunai-regular-text($whiteColor);
-        font-size: 16px;
+        font-size: 12.8px;
         padding-top: 35px;
     }
 

@@ -1,0 +1,17 @@
+@import '../Shared/Styles/colors.scss';
+@import '../Shared/Styles/typography.scss';
+
+.contact {
+  margin-bottom: 10px;
+  &__text {
+    @include kunai-secondary-text($kunaiBlueColor);
+    margin-top: 50px;
+    font-weight: bold;
+    letter-spacing: 1.08px;
+    font-size: 24px;
+  }
+
+  &__button {
+    margin-top: 30px;
+  }
+}

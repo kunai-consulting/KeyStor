@@ -13,23 +13,24 @@ import Capabilities from '../Capabilities/Capabilities';
 import SecureArchitecture from '../SecureArchitecture/SecureArchitecture';
 import HowItWorks from '../HowItWorks/HowItWorks';
 import KeystorDemo from '../KeystoreDemo/KeystorDemo';
+import Contact from '../Contact/Contact';
 import './App.scss';
 
 class App extends React.Component {
   render() {
     return (
-      <body>
+      <div>
         <Header />
-        <img className="cubes cubes-1" src={cubes4} />
-        <img className="cubes cubes-2" src={cubes5} />
-        <img className="cubes cubes-3" src={cubes2} />
-        <img className="cubes cubes-4" src={cubes1} />
-        <img className="cubes cubes-5" src={cubes1} />
-        <img className="cubes cubes-6" src={cubes5} />
-        <img className="cubes cubes-7" src={cubes1} />
-        <img className="cubes cubes-8" src={cubes1} />
-        <img className="cubes cubes-9" src={cubes1} />
-        <img className="cubes cubes-10" src={cubes5} />
+        <img alt="cubes" className="cubes cubes-1" src={cubes4} />
+        <img alt="cubes" className="cubes cubes-2" src={cubes5} />
+        <img alt="cubes" className="cubes cubes-3" src={cubes2} />
+        <img alt="cubes" className="cubes cubes-4" src={cubes1} />
+        <img alt="cubes" className="cubes cubes-5" src={cubes1} />
+        <img alt="cubes" className="cubes cubes-6" src={cubes5} />
+        <img alt="cubes" className="cubes cubes-7" src={cubes1} />
+        <img alt="cubes" className="cubes cubes-8" src={cubes1} />
+        <img alt="cubes" className="cubes cubes-9" src={cubes1} />
+        <img alt="cubes" className="cubes cubes-10" src={cubes5} />
         <SectionWithLeftBar
           barColor={Colors.white}
           sectionBackgroundColor={Colors.blue}
@@ -66,8 +67,14 @@ class App extends React.Component {
         >
           <KeystorDemo />
         </SectionWithLeftBar>
+        <SectionWithLeftBar
+          barColor={Colors.blue}
+          sectionBackgroundColor={Colors.peach}
+        >
+          <Contact />
+        </SectionWithLeftBar>
         <Footer />
-      </body>
+      </div>
     )
   }
 }

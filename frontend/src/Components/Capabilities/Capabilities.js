@@ -74,7 +74,7 @@ const Capabilities = () => (
           </div>
           <div className={`${rowClass} capabilities__paper__bullets`}>
             <div className={twoColClass}>
-              <StyledBullet className="capabilities__paper__bullet">Use an open source solution like <a href="https://github.com/kunai-consulting/KeyStor">KeyStor</a>.</StyledBullet>
+              <StyledBullet className="capabilities__paper__bullet">Use an open source solution like <a href="https://github.com/kunai-consulting/KeyStor" target="__blank" className="underline-link">KeyStor</a>.</StyledBullet>
             </div>
             <div className={twoColClass}>
               <StyledBullet className="capabilities__paper__bullet">Use a similar cloud based SaaS vendor like Very Good Security.</StyledBullet>
