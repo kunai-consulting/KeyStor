@@ -86,7 +86,5 @@ class HowItWorks extends React.Component {
     )
   }
 }
-// const HowItWorks = () => (
-// );
 
 export default HowItWorks;
