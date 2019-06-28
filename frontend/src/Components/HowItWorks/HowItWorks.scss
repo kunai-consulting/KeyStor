@@ -12,6 +12,7 @@
   }
 }
 
+
 .slide__content {
   &__left {
     display: flex;
@@ -33,22 +34,59 @@
   }
 }
 
+@keyframes fadeOut {
+  from {
+    opacity: 1.0;
+  }
+  
+  to {
+    opacity: 0.0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0.0;
+  }
+  
+  to {
+    opacity: 1.0;
+  }
+}
+
 .carousel .slide  {
   background: $whiteColor;
+  transition: opacity .25s ease-in;
+  opacity: 0.0;
+}
+
+.selected {
+  transition: opacity .25s ease-in;
+  opacity: 1.0 !important;
+}
+
+.carousel .control-dots {
+  position: relative;
+  margin-top: -40px;
+
+  @include media-breakpoint-down(lg) {
+    margin-top: 60px;
+  }
 }
 
 .carousel .control-dots .dot.selected {
   background: $kunaiRedColor;
   box-shadow: none;
-  height: 13px;
-  width: 13px;
+  height: 18px;
+  width: 18px;
 }
 
 .carousel .control-dots .dot {
   box-shadow: none;
-  background: $grayBulletColor;
-  height: 13px;
-  width: 13px;
+  opacity: .8;
+  background: rgb(150, 150, 150);
+  height: 18px;
+  width: 18px;
 }
 
 .slider-wrapper {

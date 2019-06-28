@@ -35,42 +35,6 @@
         }
     }
 
-    button {
-        min-width: 290px;
-        padding: 0px 40px;
-        height: 49px;
-        @include kunai-regular-text($whiteColor);
-        letter-spacing: 4.27px;
-        text-transform: uppercase;
-        margin-right: 10px;
-
-        @include media-breakpoint-down(md) {
-            margin-bottom: 10px;
-        }
-    }
-
-    button:hover {
-        opacity: .8;
-        cursor: pointer;
-    }
-
-    .button-primary {
-        border: 2px solid $whiteColor;
-        background-color: $whiteColor;
-        color: black;
-    }
-
-    .button-secondary {
-        border: 2px solid $whiteColor;
-        background-color: transparent;
-        color: $whiteColor
-    }
-
-    button:disabled {
-        opacity: .5;
-        cursor: not-allowed !important;
-    }
-
     .input-feedback {
         color: red;
         margin-top: .25rem;

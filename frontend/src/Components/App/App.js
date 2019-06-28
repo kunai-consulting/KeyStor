@@ -13,12 +13,13 @@ import Capabilities from '../Capabilities/Capabilities';
 import SecureArchitecture from '../SecureArchitecture/SecureArchitecture';
 import HowItWorks from '../HowItWorks/HowItWorks';
 import KeystorDemo from '../KeystoreDemo/KeystorDemo';
+import Contact from '../Contact/Contact';
 import './App.scss';
 
 class App extends React.Component {
   render() {
     return (
-      <body>
+      <div>
         <Header />
         <img alt="cubes" className="cubes cubes-1" src={cubes4} />
         <img alt="cubes" className="cubes cubes-2" src={cubes5} />
@@ -66,8 +67,14 @@ class App extends React.Component {
         >
           <KeystorDemo />
         </SectionWithLeftBar>
+        <SectionWithLeftBar
+          barColor={Colors.blue}
+          sectionBackgroundColor={Colors.peach}
+        >
+          <Contact />
+        </SectionWithLeftBar>
         <Footer />
-      </body>
+      </div>
     )
   }
 }

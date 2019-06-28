@@ -1,4 +1,5 @@
 @import '../Shared/Styles/colors.scss';
+@import '../Shared/Styles/typography.scss';
 @import '~bootstrap/scss/bootstrap-grid.scss';
 
 * {
@@ -15,12 +16,15 @@ body {
 
 a {
   text-decoration: none;
+}
+
+.underline-link {
   color: $kunaiBlueColor;
   font-weight: bold;
   border-bottom: 3px solid $kunaiRedColor;
 }
 
-a:hover {
+.underline-link:hover {
   opacity: .7;
 }
 
@@ -34,6 +38,48 @@ h1, h2 {
 
 .no-padding {
   padding: 0;
+}
+
+button {
+  min-width: 290px;
+  padding: 0px 40px;
+  height: 49px;
+  @include kunai-regular-text($whiteColor);
+  letter-spacing: 4.27px;
+  text-transform: uppercase;
+  margin-right: 10px;
+
+  @include media-breakpoint-down(md) {
+    margin-bottom: 10px;
+  }
+}
+
+button:hover {
+  opacity: .8;
+  cursor: pointer;
+}
+
+.button-primary {
+  border: 2px solid $whiteColor;
+  background-color: $whiteColor;
+  color: black !important;
+}
+
+.button-blue {
+  border: 2px solid $kunaiBlueColor;
+  background-color: $kunaiBlueColor;
+  color: $whiteColor !important;
+}
+
+.button-secondary {
+  border: 2px solid $whiteColor;
+  background-color: transparent;
+  color: $whiteColor
+}
+
+button:disabled {
+  opacity: .5;
+  cursor: not-allowed !important;
 }
 
 .content-chunk {
